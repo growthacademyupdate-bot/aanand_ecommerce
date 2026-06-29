@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;
+    --foreground: 240 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+
+    --primary: 168 60% 28%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 80% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 40 20% 94%;
+    --muted-foreground: 240 5% 46%;
+
+    --accent: 275 50% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 168 60% 28%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 240 10% 10%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 168 60% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 8% 16%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 240 8% 20%;
+    --sidebar-ring: 168 60% 45%;
+
+    --peacock-teal: 168 60% 28%;
+    --peacock-green: 145 50% 35%;
+    --saffron: 30 80% 55%;
+    --royal-purple: 275 50% 40%;
+    --magenta: 330 70% 50%;
+    --gold: 42 80% 55%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(168 60% 28%), hsl(275 50% 40%));
+    --gradient-saffron: linear-gradient(135deg, hsl(30 80% 55%), hsl(42 80% 55%));
+    --gradient-peacock: linear-gradient(135deg, hsl(168 60% 28%), hsl(145 50% 35%));
+
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Poppins', sans-serif;
+  }
+
+  .dark {
+    --background: 240 10% 6%;
+    --foreground: 0 0% 95%;
+    --card: 240 10% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 240 10% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 168 60% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 80% 55%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 8% 16%;
+    --muted-foreground: 240 5% 60%;
+    --accent: 275 50% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 8% 20%;
+    --input: 240 8% 20%;
+    --ring: 168 60% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:opacity-90 hover:shadow-lg;
+  }
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:opacity-90;
+  }
+  .btn-outline-primary {
+    @apply border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
+  }
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-foreground text-center;
+    font-family: var(--font-display);
+  }
+  .section-subtitle {
+    @apply text-muted-foreground text-center mt-2 max-w-2xl mx-auto;
+  }
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  .gradient-saffron {
+    background: var(--gradient-saffron);
+  }
+  .gradient-peacock {
+    background: var(--gradient-peacock);
+  }
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+}
+
+@layer utilities {
+  .skeleton-loading {
+    @apply animate-pulse bg-muted rounded;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
