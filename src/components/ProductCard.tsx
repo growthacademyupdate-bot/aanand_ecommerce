@@ -105,10 +105,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Link href={`/product/${product.slug}`} className="group block">
-      <div ref={containerRef} className="bg-card rounded-xl overflow-hidden card-hover border border-border">
-        <div className="relative aspect-[3/4] overflow-hidden">
+      <div ref={containerRef} className="bg-white rounded-xl overflow-hidden border border-gray-200 transition-all hover:shadow-md">
+        <div className="relative aspect-[3/4] overflow-hidden bg-gray-50">
           {!imgLoaded && (
-            <div className="absolute inset-0 bg-muted animate-pulse" />
+            <div className="absolute inset-0 bg-gray-200 animate-pulse" />
           )}
           {isNearViewport && (
             <Image
@@ -122,7 +122,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 setImageSrc('/placeholder.svg');
                 setImgLoaded(true);
               }}
-              className={`object-cover transition-transform duration-500 group-hover:scale-110 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-cover transition-transform duration-500 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
           )}
           <div className="absolute top-3 left-3 right-3 z-20 flex items-start justify-between gap-2">
@@ -136,8 +136,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
             
             {/* Sale/Discount badge */}
             {!product.isPrebooking && discount > 0 ? (
-              <span className="bg-destructive text-destructive-foreground text-[10px] sm:text-xs font-bold px-2 py-1 rounded-md max-w-[48%] truncate">
-                {product.isSale ? `${discount}% OFF` : `-${discount}%`}
+              <span className="bg-[#e11d48] text-white text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-sm max-w-[48%] truncate">
+                {product.isSale ? `${discount}% OFF` : `${discount}% OFF`}
               </span>
             ) : (
               !product.isPrebooking && <span />
@@ -152,28 +152,28 @@ const ProductCard = ({ product }: ProductCardProps) => {
             )}
           </div>
           {product.isNew && (
-            <span className="absolute bottom-3 right-3 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-md">
+            <span className="absolute bottom-3 right-3 bg-[#10B981] text-white text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-sm">
               NEW
             </span>
           )}
           {/* Hover overlay */}
-          <div className="absolute inset-0 bg-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
-            <button onClick={handleAddToCart} className="bg-card text-foreground p-3 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors" title="Add to Cart">
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+            <button onClick={handleAddToCart} className="bg-white text-gray-900 p-3 rounded-full hover:bg-[#10B981] hover:text-white transition-colors shadow-lg" title="Add to Cart">
               <ShoppingCart className="h-5 w-5" />
             </button>
-            <button onClick={handleToggleWishlist} className={`p-3 rounded-full transition-colors ${isWished ? 'bg-destructive text-destructive-foreground' : 'bg-card text-foreground hover:bg-destructive hover:text-destructive-foreground'}`} title="Wishlist">
+            <button onClick={handleToggleWishlist} className={`p-3 rounded-full shadow-lg transition-colors ${isWished ? 'bg-[#e11d48] text-white' : 'bg-white text-gray-900 hover:bg-[#e11d48] hover:text-white'}`} title="Wishlist">
               <Heart className="h-5 w-5" fill={isWished ? 'currentColor' : 'none'} />
             </button>
           </div>
         </div>
-        <div className="p-4">
-          <h3 className="font-medium text-foreground text-sm truncate">{product.name}</h3>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-primary font-bold">
-              Rs{product.isPrebooking ? (product.prebookingPrice || product.price) : product.price.toLocaleString()}
+        <div className="p-4 bg-white">
+          <h3 className="font-medium text-gray-900 text-sm truncate">{product.name}</h3>
+          <div className="flex items-center gap-2 mt-1.5">
+            <span className="text-[#10B981] font-bold text-base">
+              Rs{(product.isPrebooking ? (product.prebookingPrice || product.price) : product.price).toLocaleString()}
             </span>
             {product.comparePrice > product.price && (
-              <span className="text-muted-foreground text-sm line-through">Rs{product.comparePrice.toLocaleString()}</span>
+              <span className="text-gray-400 text-sm line-through">Rs{product.comparePrice.toLocaleString()}</span>
             )}
           </div>
           

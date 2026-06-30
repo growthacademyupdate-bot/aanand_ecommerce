@@ -6,6 +6,8 @@ import AdminLayout from '@/components/AdminLayout';
 import { useStore } from '@/store/useStore';
 import { toast } from '@/hooks/use-toast';
 import { uploadToR2 } from '@/lib/r2Upload';
+import SimpleProductModal from './SimpleProductModal';
+import VariantProductModal from './VariantProductModal';
 
 // Database interfaces
 interface ColorVariant {
@@ -29,11 +31,13 @@ interface DbProduct {
   _id?: string;
   name: string;
   slug: string;
+  productType?: 'simple' | 'variant' | 'legacy';
   price: number;
   comparePrice: number;
   category: string;
   stock: number;
   colors: ColorVariant[];
+  variants?: any[];
   description: string;
   fabric: string;
   size?: string;
@@ -143,6 +147,8 @@ const AdminProducts = () => {
   const [subcategories, setSubcategories] = useState<DbSubcategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isSimpleModalOpen, setIsSimpleModalOpen] = useState(false);
+  const [isVariantModalOpen, setIsVariantModalOpen] = useState(false);
   const [editing, setEditing] = useState<DbProduct | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsProduct, setDetailsProduct] = useState<DbProduct | null>(null);
@@ -720,8 +726,11 @@ const AdminProducts = () => {
           <button onClick={() => setAddSubcategoryModalOpen(true)} className="btn-secondary flex items-center gap-2 text-sm py-2 px-3 shadow-sm">
             <Plus className="h-4 w-4" /> Add Subcategory
           </button>
-          <button onClick={() => openAddModal()} className="btn-primary flex items-center gap-2 text-sm py-2 px-4 shadow-sm">
-            <Plus className="h-4 w-4" /> Add Product
+          <button onClick={() => setIsSimpleModalOpen(true)} className="btn-primary flex items-center gap-2 text-sm py-2 px-4 shadow-sm">
+            <Plus className="h-4 w-4" /> Add Simple Product
+          </button>
+          <button onClick={() => setIsVariantModalOpen(true)} className="btn-primary flex items-center gap-2 text-sm py-2 px-4 shadow-sm">
+            <Plus className="h-4 w-4" /> Add Variant Product
           </button>
         </div>
       </div>
@@ -778,6 +787,7 @@ const AdminProducts = () => {
               <thead className="border-b border-border bg-muted/50">
                 <tr>
                   <th className="text-left p-4">Product</th>
+                  <th className="text-left p-4">Type</th>
                   <th className="text-left p-4">Price</th>
                   <th className="text-left p-4">Offer%</th>
                   <th className="text-left p-4">Stock</th>
@@ -790,7 +800,7 @@ const AdminProducts = () => {
                   <tr key={p._id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
                     <td className="p-4 flex items-center gap-3">
                       <img
-                        src={p.colors?.[0]?.images?.[0] || p.images?.[0] || '/placeholder.svg'}
+                        src={p.images?.[0] || p.variants?.[0]?.image || p.colors?.[0]?.images?.[0] || '/placeholder.svg'}
                         alt={p.name}
                         className="w-10 h-12 object-cover rounded"
                       />
@@ -800,12 +810,21 @@ const AdminProducts = () => {
                         {p.isLimitedOffer && <span className="ml-2 text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-800 font-medium">Limited</span>}
                       </div>
                     </td>
-                    <td className="p-4">₹{p.price.toLocaleString()}</td>
+                    <td className="p-4 capitalize">
+                      {p.productType === 'simple' ? (
+                        <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-medium">Simple</span>
+                      ) : p.productType === 'variant' ? (
+                        <span className="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-800 font-medium">Variant</span>
+                      ) : (
+                        <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 font-medium">Legacy</span>
+                      )}
+                    </td>
+                    <td className="p-4">₹{p.price?.toLocaleString()}</td>
                     <td className="p-4">{p.comparePrice > p.price ? `${Math.round(((p.comparePrice - p.price) / p.comparePrice) * 100)}%` : '—'}</td>
-                    <td className="p-4">{calculateProductStock(p)}</td>
+                    <td className="p-4">{p.productType ? p.stock : calculateProductStock(p)}</td>
                     <td className="p-4">
-                      <span className={`text-xs px-2 py-1 rounded-full ${calculateProductStock(p) > 10 ? 'bg-primary/20 text-primary' : calculateProductStock(p) > 0 ? 'bg-gold/20 text-gold' : 'bg-destructive/20 text-destructive'}`}>
-                        {calculateProductStock(p) > 10 ? 'In Stock' : calculateProductStock(p) > 0 ? 'Low Stock' : 'Out of Stock'}
+                      <span className={`text-xs px-2 py-1 rounded-full ${(p.productType ? p.stock : calculateProductStock(p)) > 10 ? 'bg-primary/20 text-primary' : (p.productType ? p.stock : calculateProductStock(p)) > 0 ? 'bg-gold/20 text-gold' : 'bg-destructive/20 text-destructive'}`}>
+                        {(p.productType ? p.stock : calculateProductStock(p)) > 10 ? 'In Stock' : (p.productType ? p.stock : calculateProductStock(p)) > 0 ? 'Low Stock' : 'Out of Stock'}
                       </span>
                     </td>
                     <td className="p-4 text-right space-x-1">
@@ -819,7 +838,18 @@ const AdminProducts = () => {
                       <button onClick={() => toggleHidden(p)} className="p-2 hover:bg-muted rounded-lg transition-colors" title={p.hidden ? 'Show' : 'Hide'}>
                         {p.hidden ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
                       </button>
-                      <button onClick={() => openEditModal(p)} className="p-2 hover:bg-muted rounded-lg transition-colors">
+                      <button onClick={() => {
+                        if (p.productType === 'variant') {
+                          setEditing(p);
+                          setIsVariantModalOpen(true);
+                        } else if (p.productType === 'simple') {
+                          setEditing(p);
+                          setIsSimpleModalOpen(true);
+                        } else {
+                          // Legacy fallback
+                          openEditModal(p);
+                        }
+                      }} className="p-2 hover:bg-muted rounded-lg transition-colors" title="Edit">
                         <Pencil className="h-4 w-4 text-primary" />
                       </button>
                       <button onClick={() => setConfirmDelete(p._id || '')} className="p-2 hover:bg-muted rounded-lg transition-colors">
@@ -860,603 +890,36 @@ const AdminProducts = () => {
         )}
       </div>
 
-      {/* Product Form Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 bg-foreground/50 flex items-center justify-center p-4">
-          <div className="bg-card rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-border">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-lg font-semibold">{editing ? 'Edit Product' : 'Add Product'}</h2>
-              <button onClick={() => { setModalOpen(false); setIsDressMode(false); }}><X className="h-5 w-5" /></button>
-            </div>
-            <div className="space-y-4">
-              {/* Product Name - First Field */}
-              <div>
-                <label className="block text-sm font-medium mb-1">Product Name</label>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                  placeholder="Enter product name"
-                />
-              </div>
+      {/* New Product Modals */}
+      <SimpleProductModal
+        isOpen={isSimpleModalOpen}
+        onClose={() => {
+          setIsSimpleModalOpen(false);
+          setEditing(null);
+        }}
+        categories={categories as any[]}
+        subcategories={subcategories as any[]}
+        initialData={editing}
+        onSuccess={() => {
+          fetchData(false);
+          setEditing(null);
+        }}
+      />
 
-              {/* SKU and Barcode - Side by Side */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium mb-1">SKU *</label>
-                  <input
-                    type="text"
-                    value={form.sku}
-                    onChange={(e) => setForm({ ...form, sku: e.target.value })}
-                    className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="Enter SKU"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Barcode *</label>
-                  <input
-                    type="text"
-                    value={form.barcode}
-                    onChange={(e) => setForm({ ...form, barcode: e.target.value })}
-                    className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="Enter Barcode"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Price Fields */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Original Price (₹)</label>
-                  <input
-                    type="number"
-                    value={form.originalPrice}
-                    onChange={(e) => setForm({ ...form, originalPrice: e.target.value })}
-                    className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="4000"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Sale Price (₹)</label>
-                  <input
-                    type="number"
-                    value={form.salePrice}
-                    onChange={(e) => setForm({ ...form, salePrice: e.target.value })}
-                    className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="1999"
-                  />
-                </div>
-              </div>
-
-              {/* Colors with Image Uploads */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Colors</label>
-                <div className="space-y-3">
-                  {form.colors.map((color, index) => (
-                    <div key={`color-${index}`} className="border border-border rounded-lg p-3 space-y-3">
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1">
-                          <label className="block text-sm font-medium mb-1">Color Name</label>
-                          <input
-                            type="text"
-                            value={color.colorName}
-                            onChange={(e) => {
-                              const updatedColors = form.colors.map((c, i) =>
-                                i === index ? { ...c, colorName: e.target.value } : c
-                              );
-                              setForm({ ...form, colors: updatedColors });
-                            }}
-                            className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                            placeholder="Enter color name"
-                          />
-                        </div>
-                        {!isDressMode && (
-                          <div className="w-28">
-                            <label className="block text-sm font-medium mb-1">Stock</label>
-                            <input
-                              type="text"
-                              value={color.stock}
-                              onChange={(e) => {
-                                const updatedColors = form.colors.map((c, i) =>
-                                  i === index ? { ...c, stock: e.target.value } : c
-                                );
-                                setForm({ ...form, colors: updatedColors });
-                              }}
-                              className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                              placeholder="0"
-                              min="0"
-                            />
-                          </div>
-                        )}
-                        {isDressMode && (
-                          <div className="w-28">
-                            <label className="block text-sm font-medium mb-1">Stock</label>
-                            <input
-                              type="text"
-                              defaultValue={calculateColorStock(color).toString()}
-                              disabled={color.hasSizes}
-                              className={`w-full border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring ${color.hasSizes ? 'bg-muted cursor-not-allowed' : 'bg-background'}`}
-                              placeholder="0"
-                              min="0"
-                            />
-                          </div>
-                        )}
-                        <button
-                          onClick={() => removeColor(index)}
-                          className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </div>
-                      
-                      {/* Dress-specific size-wise inventory */}
-                      {isDressMode && (
-                        <div>
-                          <label className="flex items-center gap-2 text-sm font-medium mb-2">
-                            <input
-                              type="checkbox"
-                              checked={color.hasSizes}
-                              onChange={(e) => {
-                                const updatedColors = form.colors.map((c, i) =>
-                                  i === index ? { ...c, hasSizes: e.target.checked } : c
-                                );
-                                setForm({ ...form, colors: updatedColors });
-                              }}
-                              className="rounded border-border text-primary focus:ring-primary"
-                            />
-                            This product has sizes
-                          </label>
-
-                          {color.hasSizes && (
-                            <div className="grid grid-cols-7 gap-2 mt-2">
-                              {['S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'FREE'].map((size) => (
-                                <div key={size} className="flex flex-col">
-                                  <label className="text-xs text-muted-foreground mb-1">{size}</label>
-                                  <input
-                                    type="number"
-                                    value={color.sizes?.[size.toLowerCase() as keyof typeof color.sizes] || '0'}
-                                    onChange={(e) => {
-                                      const updatedColors = form.colors.map((c, i) =>
-                                        i === index ? {
-                                          ...c,
-                                          sizes: {
-                                            ...c.sizes,
-                                            [size.toLowerCase()]: e.target.value
-                                          }
-                                        } : c
-                                      );
-                                      setForm({ ...form, colors: updatedColors });
-                                    }}
-                                    className="w-full border border-border rounded px-2 py-1 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-                                    placeholder="0"
-                                    min="0"
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Upload Image</label>
-                        <div className="flex items-center gap-3">
-                          {Array.isArray(color.images) && color.images.length > 0 && (
-                            <div className="flex items-center gap-2 flex-wrap">
-                              {color.images.slice(0, 4).map((img, imgIdx) => (
-                                <img
-                                  key={imgIdx}
-                                  src={img}
-                                  alt={color.colorName}
-                                  className="w-16 h-16 object-cover rounded border border-border"
-                                />
-                              ))}
-                            </div>
-                          )}
-                          <label className="flex items-center gap-2 px-4 py-2 bg-muted rounded-lg text-sm cursor-pointer hover:bg-muted/80 transition-colors">
-                            <Upload className="h-4 w-4" /> Upload Image
-                            <input
-                              type="file"
-                              accept="image/*"
-                              disabled={submitting || uploadingColorIndex !== null}
-                              onChange={(e) => void uploadColorImage(index, e)}
-                              className="hidden"
-                            />
-                          </label>
-                          {uploadingColorIndex === index && (
-                            <div className="text-xs text-muted-foreground">Uploading: {uploadProgress}%</div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  <button
-                    onClick={addColor}
-                    className="w-full px-3 py-2 border-2 border-dashed border-border rounded-lg text-sm text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-                  >
-                    + Add Color
-                  </button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Fabric</label>
-                  <input
-                    type="text"
-                    value={form.fabric}
-                    onChange={(e) => setForm({ ...form, fabric: e.target.value })}
-                    className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="Enter fabric type"
-                  />
-                </div>
-                {!isDressMode && (
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium mb-3">
-                      <input
-                        type="checkbox"
-                        checked={form.hasSizes}
-                        onChange={(e) => setForm({ ...form, hasSizes: e.target.checked, sizes: e.target.checked ? form.sizes : [], sizeQuantities: e.target.checked ? form.sizeQuantities : {} })}
-                        className="rounded border-border text-primary focus:ring-primary"
-                      />
-                      This product has sizes
-                    </label>
-
-                    {form.hasSizes && (
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Available Sizes & Quantities</label>
-                        <div className="space-y-2">
-                          {['S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'FREE'].map((size) => (
-                            <div key={size} className="flex items-center gap-3">
-                              <label className="flex items-center gap-2 text-sm flex-1">
-                                <input
-                                  type="checkbox"
-                                  checked={form.sizes.includes(size)}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
-                                      setForm({
-                                        ...form,
-                                        sizes: [...form.sizes, size],
-                                        sizeQuantities: { ...form.sizeQuantities, [size]: '0' }
-                                      });
-                                    } else {
-                                      const newSizeQuantities = { ...form.sizeQuantities };
-                                      delete newSizeQuantities[size];
-                                      setForm({
-                                        ...form,
-                                        sizes: form.sizes.filter(s => s !== size),
-                                        sizeQuantities: newSizeQuantities
-                                      });
-                                    }
-                                  }}
-                                  className="rounded border-border text-primary focus:ring-primary"
-                                />
-                                {size}
-                              </label>
-                              {form.sizes.includes(size) && (
-                                <div className="flex items-center gap-2">
-                                  <label className="text-xs text-muted-foreground">Qty:</label>
-                                  <input
-                                    type="number"
-                                    value={form.sizeQuantities[size] || '0'}
-                                    onChange={(e) => {
-                                      setForm({
-                                        ...form,
-                                        sizeQuantities: { ...form.sizeQuantities, [size]: e.target.value }
-                                      });
-                                    }}
-                                    className="w-20 border border-border rounded px-2 py-1 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-                                    placeholder="0"
-                                    min="0"
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-                <div className="rounded-3xl border border-border bg-muted/70 p-3 text-sm text-muted-foreground">
-                  Total product stock is calculated from color quantities: <span className="font-semibold text-foreground">{totalStock}</span>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Saree Length (meters)</label>
-                  <input
-                    type="text"
-                    value={form.sareeLength}
-                    onChange={(e) => setForm({ ...form, sareeLength: e.target.value })}
-                    className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="e.g. 5.5"
-                  />
-                </div>
-              </div>
-
-              {!isDressMode && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Category</label>
-                    <select 
-                      value={form.categoryId || form.category} 
-                      onChange={(e) => {
-                        const catId = e.target.value;
-                        const cat = categories.find(c => c._id === catId);
-                        setForm({ ...form, categoryId: catId, category: cat?.slug || catId, subcategoryId: '' });
-                      }} 
-                      className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm"
-                    >
-                      <option value="">Select Category</option>
-                      {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Subcategory</label>
-                    <select 
-                      value={form.subcategoryId} 
-                      onChange={(e) => setForm({ ...form, subcategoryId: e.target.value })} 
-                      disabled={!form.categoryId}
-                      className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm disabled:opacity-50"
-                    >
-                      <option value="">{form.categoryId ? 'Select Subcategory' : 'Select Category First'}</option>
-                      {subcategories.filter(s => s.categoryId === form.categoryId).map((s) => (
-                        <option key={s._id} value={s._id}>{s.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
-                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring" />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Product Card Offer Text</label>
-                <input
-                  type="text"
-                  value={form.cardOfferText}
-                  onChange={(e) => setForm({ ...form, cardOfferText: e.target.value })}
-                  className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                  placeholder="e.g. BUY 1 GET 1"
-                  maxLength={40}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Tags (comma separated)</label>
-                <input
-                  type="text"
-                  value={form.tags.join(', ')}
-                  onChange={(e) => setForm({ ...form, tags: e.target.value.split(',').map(tag => tag.trim()) })}
-                  placeholder="Enter tags separated by commas"
-                />
-              </div>
-
-              {/* Checkboxes */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium">
-                    <input
-                      type="checkbox"
-                      checked={form.featured}
-                      onChange={(e) => setForm({ ...form, featured: e.target.checked })}
-                      className="rounded"
-                    />
-                    Featured Product
-                  </label>
-                </div>
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium">
-                    <input
-                      type="checkbox"
-                      checked={form.isNew}
-                      onChange={(e) => setForm({ ...form, isNew: e.target.checked })}
-                      className="rounded"
-                    />
-                    New Product
-                  </label>
-                </div>
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium">
-                    <input
-                      type="checkbox"
-                      checked={form.isPremium}
-                      onChange={(e) => setForm({ ...form, isPremium: e.target.checked })}
-                      className="rounded"
-                    />
-                    Premium Product
-                  </label>
-                </div>
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium">
-                    <input
-                      type="checkbox"
-                      checked={form.isTrending}
-                      onChange={(e) => setForm({ ...form, isTrending: e.target.checked })}
-                      className="rounded"
-                    />
-                    Trending Product
-                  </label>
-                </div>
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium">
-                    <input
-                      type="checkbox"
-                      checked={form.isLiveSpecial}
-                      onChange={(e) => setForm({ ...form, isLiveSpecial: e.target.checked })}
-                      className="rounded"
-                    />
-                    Live Special
-                  </label>
-                </div>
-              </div>
-
-              {/* Limited Offer Section */}
-              <div className="rounded-lg border border-border bg-muted/30 p-4">
-                <div className="space-y-4">
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium">
-                      <input
-                        type="checkbox"
-                        checked={form.isLimitedOffer}
-                        onChange={(e) => setForm({ ...form, isLimitedOffer: e.target.checked, limitedStock: e.target.checked ? form.limitedStock : '', limitedOfferMessage: e.target.checked ? form.limitedOfferMessage : '' })}
-                        className="rounded"
-                      />
-                      Limited Offer Product
-                    </label>
-                    <p className="text-xs text-muted-foreground mt-1">Enable to show urgency messaging on the website</p>
-                  </div>
-
-                  {form.isLimitedOffer && (
-                    <div className="grid grid-cols-1 gap-3">
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Limited Stock Quantity</label>
-                        <input
-                          type="number"
-                          value={form.limitedStock}
-                          onChange={(e) => setForm({ ...form, limitedStock: e.target.value })}
-                          className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                          placeholder="e.g. 5"
-                          min="1"
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">Number of items left for this limited offer</p>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Limited Offer Message</label>
-                        <input
-                          type="text"
-                          value={form.limitedOfferMessage}
-                          onChange={(e) => setForm({ ...form, limitedOfferMessage: e.target.value })}
-                          className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                          placeholder="e.g. Hurry! Only few left in stock!"
-                          maxLength={100}
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">Custom urgency message (max 100 characters)</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Prebooking Section */}
-              <div className="rounded-lg border border-border bg-muted/30 p-4">
-                <div className="space-y-4">
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={form.isPrebooking}
-                        onChange={(e) => setForm({ ...form, isPrebooking: e.target.checked, prebookingPrice: e.target.checked ? form.prebookingPrice : '', prebookingDeliveryDays: e.target.checked ? form.prebookingDeliveryDays : '', prebookingMessage: e.target.checked ? form.prebookingMessage : '' })}
-                        className="rounded"
-                      />
-                      Enable Prebooking
-                    </label>
-                    <p className="text-xs text-muted-foreground mt-1">Allow customers to prebook this product before it's available</p>
-                  </div>
-
-                  {form.isPrebooking && (
-                    <>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Prebooking Price (₹)</label>
-                          <input
-                            type="number"
-                            value={form.prebookingPrice}
-                            onChange={(e) => setForm({ ...form, prebookingPrice: e.target.value })}
-                            className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                            placeholder="9999"
-                            min="0"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">Price for prebooking (can be same as regular price)</p>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Delivery Days</label>
-                          <input
-                            type="number"
-                            value={form.prebookingDeliveryDays}
-                            onChange={(e) => setForm({ ...form, prebookingDeliveryDays: e.target.value })}
-                            className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                            placeholder="10"
-                            min="1"
-                            max="30"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">Expected delivery time in days</p>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Prebooking Message</label>
-                        <input
-                          type="text"
-                          value={form.prebookingMessage}
-                          onChange={(e) => setForm({ ...form, prebookingMessage: e.target.value })}
-                          className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                          placeholder="e.g. Exclusive prebooking - Limited availability!"
-                          maxLength={100}
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">Custom message for prebooking (max 100 characters)</p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Rating</label>
-                  <input
-                    type="number"
-                    value={form.rating}
-                    onChange={(e) => setForm({ ...form, rating: Number(e.target.value) })}
-                    className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="0-5"
-                    min="0"
-                    max="5"
-                    step="0.1"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Reviews</label>
-                  <input
-                    type="number"
-                    value={form.reviews}
-                    onChange={(e) => setForm({ ...form, reviews: Number(e.target.value) })}
-                    className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="0"
-                    min="0"
-                  />
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="flex gap-3 pt-4">
-                <button onClick={() => { setModalOpen(false); setIsDressMode(false); }} disabled={submitting} className="flex-1 btn-outline-primary text-sm py-2 disabled:opacity-50">
-                  Cancel
-                </button>
-                <button onClick={handleSave} disabled={submitting} className="flex-1 btn-primary text-sm py-2 disabled:opacity-50 flex items-center justify-center gap-2">
-                  {submitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    editing ? 'Update Product' : 'Add Product'
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <VariantProductModal
+        isOpen={isVariantModalOpen}
+        onClose={() => {
+          setIsVariantModalOpen(false);
+          setEditing(null);
+        }}
+        categories={categories as any[]}
+        subcategories={subcategories as any[]}
+        initialData={editing}
+        onSuccess={() => {
+          fetchData(false);
+          setEditing(null);
+        }}
+      />
 
       {/* Product Details Modal */}
       {detailsOpen && detailsProduct && (

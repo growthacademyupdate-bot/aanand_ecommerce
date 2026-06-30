@@ -289,7 +289,12 @@ export async function POST(request: NextRequest) {
 
     const name = String(body?.name || '').trim();
     const category = String(body?.category || '').trim();
-    const sku = String(body?.sku || '').trim();
+    const productType = String(body?.productType || 'legacy').trim();
+    
+    // For legacy products, they come from the root level. 
+    // For simple products, SKU comes from the root. 
+    // For variant products, we might not have a root SKU, or we take the first variant's SKU.
+    const sku = String(body?.sku || (body?.variants?.[0]?.sku) || '').trim();
     const barcode = String(body?.barcode || '').trim();
     const subcategoryId = String(body?.subcategoryId || '').trim();
 
@@ -299,11 +304,8 @@ export async function POST(request: NextRequest) {
     if (!name) {
       return NextResponse.json({ success: false, error: 'Product name is required' }, { status: 400 });
     }
-    if (!sku) {
+    if (!sku && productType !== 'variant') {
       return NextResponse.json({ success: false, error: 'SKU is required' }, { status: 400 });
-    }
-    if (!barcode) {
-      return NextResponse.json({ success: false, error: 'Barcode is required' }, { status: 400 });
     }
     if (!category) {
       return NextResponse.json({ success: false, error: 'Category is required' }, { status: 400 });
@@ -311,46 +313,33 @@ export async function POST(request: NextRequest) {
     if (!Number.isFinite(price)) {
       return NextResponse.json({ success: false, error: 'Valid price is required' }, { status: 400 });
     }
-    if (!Number.isFinite(comparePrice)) {
-      return NextResponse.json({ success: false, error: 'Valid compare price is required' }, { status: 400 });
-    }
 
     const colors = normalizeColors(body?.colors);
-    if (colors.length === 0) {
+    if (colors.length === 0 && productType === 'legacy') {
       return NextResponse.json({ success: false, error: 'At least one color variant is required' }, { status: 400 });
     }
-
-    console.log('🔍 ADMIN API DEBUG:', {
-      productName: name,
-      incomingColors: body?.colors,
-      normalizedColors: colors,
-      isVintageFloralGrace: name === 'Vintage Floral Grace'
-    });
 
     const slug = String(body?.slug || getSlug(name));
 
     const database = await getDatabase();
 
-    // Check if SKU already exists
-    const existingSku = await database.collection('products').findOne({ sku });
-    if (existingSku) {
-      return NextResponse.json({ success: false, error: 'A product with this SKU already exists' }, { status: 400 });
-    }
-
-    // Check if barcode already exists
-    const existingBarcode = await database.collection('products').findOne({ barcode });
-    if (existingBarcode) {
-      return NextResponse.json({ success: false, error: 'A product with this barcode already exists' }, { status: 400 });
+    // Only check SKU if we have a valid root SKU to check
+    if (sku) {
+      const existingSku = await database.collection('products').findOne({ sku });
+      if (existingSku) {
+        return NextResponse.json({ success: false, error: 'A product with this SKU already exists' }, { status: 400 });
+      }
     }
 
     const doc = {
       name,
       slug,
-      sku: body?.sku || '',
-      barcode: body?.barcode || '',
+      productType,
+      sku: sku || '',
+      barcode: barcode || '',
       category,
       categoryId: body?.categoryId || category,
-      subcategoryId: body?.subcategoryId || '',
+      subcategoryId: subcategoryId,
 
       // store both for compatibility
       price,
@@ -360,6 +349,8 @@ export async function POST(request: NextRequest) {
 
       stock: Number(body?.stock) || 0,
       colors,
+      variants: Array.isArray(body?.variants) ? body.variants : [],
+      images: Array.isArray(body?.images) ? body.images : colors.flatMap((c) => c.images || []).filter(Boolean),
 
       description: body?.description || '',
       fabric: body?.fabric || '',
@@ -375,29 +366,9 @@ export async function POST(request: NextRequest) {
       isPremium: Boolean(body?.isPremium),
       isTrending: Boolean(body?.isTrending),
       isLiveSpecial: Boolean(body?.isLiveSpecial),
-      isLimitedOffer: Boolean(body?.isLimitedOffer),
-      limitedStock: body?.isLimitedOffer ? Number(body?.limitedStock) || undefined : undefined,
-      limitedOfferMessage: body?.isLimitedOffer ? String(body?.limitedOfferMessage || '') : undefined,
-      cardOfferText: typeof body?.cardOfferText === 'string' ? body.cardOfferText.trim() : '',
-
-      // Prebooking fields
-      isPrebooking: Boolean(body?.isPrebooking),
-      prebookingPrice: body?.isPrebooking ? Number(body?.prebookingPrice) || undefined : undefined,
-      prebookingDeliveryDays: body?.isPrebooking ? Number(body?.prebookingDeliveryDays) || undefined : undefined,
-      prebookingMessage: body?.isPrebooking ? String(body?.prebookingMessage || '') : undefined,
-
-      rating: Number(body?.rating) || 0,
-      reviews: Number(body?.reviews) || 0,
-      sareeLength: body?.sareeLength || '',
-      blouseIncluded: Boolean(body?.blouseIncluded),
-      tags: Array.isArray(body?.tags) ? body.tags : [],
-
-      // Form type tracking - regular products created via "Add Product"
-      formType: 'regular',
-
-      // fallbacks for legacy UI usage
-      images: colors.flatMap((c) => c.images || []).filter(Boolean),
-
+      
+      bestSeller: Boolean(body?.bestSeller),
+      
       isActive: true,
       createdAt: new Date(),
       updatedAt: new Date(),

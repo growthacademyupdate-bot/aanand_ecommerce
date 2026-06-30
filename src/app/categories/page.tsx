@@ -1,6 +1,6 @@
 "use client";
 
-import Categories from "@/pages/Categories";
+import Categories from "@/views/Categories";
 
 export default function Page() {
   return <Categories />;

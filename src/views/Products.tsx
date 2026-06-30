@@ -280,195 +280,7 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
 
     <PublicLayout>
 
-      <style>{`
-
-        @keyframes float1{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-24px) scale(1.03)}}
-
-        @keyframes float2{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(18px) scale(0.97)}}
-
-        @keyframes float3{0%,100%{transform:translateX(0)}50%{transform:translateX(12px)}}
-
-        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
-        @keyframes bannerReveal{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:scale(1)}}
-
-        @keyframes zoomPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
-
-        @keyframes spinSlow{to{transform:rotate(360deg)}}
-
-        @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-
-        .banner-reveal{animation:bannerReveal 0.9s cubic-bezier(0.22,1,0.36,1) forwards}
-
-        .fade-up-1{opacity:0;animation:fadeUp 0.6s ease 0.1s forwards}
-
-        .fade-up-2{opacity:0;animation:fadeUp 0.6s ease 0.25s forwards}
-
-        .fade-up-3{opacity:0;animation:fadeUp 0.6s ease 0.4s forwards}
-
-        .product-card:hover{transform:translateY(-12px) scale(1.05) rotate-2;box-shadow:0 32px 64px hsl(var(--primary)/0.2)}
-
-        .product-card{transition:transform 0.4s ease,box-shadow 0.4s ease}
-
-        .logo-pulse{animation:zoomPulse 4s ease-in-out infinite}
-
-        .spin-ring{animation:spinSlow 22s linear infinite}
-
-      `}</style>
-
-
-
-      <div className="min-h-screen relative overflow-hidden">
-
-        {/* background gradient */}
-
-        <div
-
-          className="absolute inset-0 pointer-events-none"
-
-          style={{
-
-            background:
-
-              'linear-gradient(160deg, hsl(var(--primary)/0.06) 0%, hsl(var(--background)) 50%, hsl(var(--secondary)/0.08) 100%)',
-
-          }}
-
-        />
-
-
-
-        {/* floating orbs */}
-
-        <div
-
-          className="absolute rounded-full pointer-events-none"
-
-          style={{
-
-            width: 380, height: 380, top: -80, right: -100,
-
-            background: 'radial-gradient(circle, hsl(var(--primary)/0.12), transparent 70%)',
-
-            animation: 'float1 10s ease-in-out infinite',
-
-          }}
-
-        />
-
-        <div
-
-          className="absolute rounded-full pointer-events-none"
-
-          style={{
-
-            width: 260, height: 260, bottom: 60, left: -80,
-
-            background: 'radial-gradient(circle, hsl(var(--secondary)/0.10), transparent 70%)',
-
-            animation: 'float2 8s ease-in-out infinite',
-
-          }}
-
-        />
-
-        <div
-
-          className="absolute rounded-full pointer-events-none"
-
-          style={{
-
-            width: 180, height: 180, top: '40%', left: '5%',
-
-            background: 'radial-gradient(circle, hsl(var(--primary)/0.07), transparent 70%)',
-
-            animation: 'float3 9s ease-in-out infinite',
-
-          }}
-
-        />
-
-
-
-        {/* ── BANNER ── */}
-
-        <div className="relative w-full overflow-hidden banner-reveal" style={{ height: 260 }}>
-
-          <div
-
-            className="absolute inset-0"
-
-            style={{
-
-              background: 'linear-gradient(160deg, hsl(var(--primary)/0.95), hsl(168 60% 18%))',
-
-            }}
-
-          />
-
-          {/* dot grid */}
-
-          <div
-
-            className="absolute inset-0 opacity-10"
-
-            style={{
-
-              backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
-
-              backgroundSize: '32px 32px',
-
-            }}
-
-          />
-
-          {/* floating shapes */}
-
-          <div className="absolute" style={{ top: '12%', left: '8%', animation: 'float1 8s ease-in-out infinite' }}>
-
-            <div className="w-16 h-16 rounded-2xl rotate-12 border-2 border-white/20" />
-
-          </div>
-
-          <div className="absolute" style={{ top: '50%', right: '10%', animation: 'float2 9s ease-in-out infinite' }}>
-
-            <div className="w-12 h-12 rounded-full border-2 border-white/20" />
-
-          </div>
-
-          <div className="absolute" style={{ bottom: '15%', left: '18%', animation: 'float3 7s ease-in-out infinite' }}>
-
-            <div className="w-8 h-8 rounded-lg rotate-45 border border-white/20" />
-
-          </div>
-
-          <div className="absolute" style={{ top: '20%', right: '25%', animation: 'spinSlow 18s linear infinite' }}>
-
-            <div className="w-20 h-20 rounded-full border border-dashed border-white/15" />
-
-          </div>
-
-          {/* banner text */}
-
-          <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
-
-            <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-
-              Morpankh Saree · Products
-
-            </p>
-
-            <h2 className="text-4xl font-bold mb-2">Our Collection</h2>
-
-            <p className="text-white/70 text-sm max-w-md">
-
-              Discover our exquisite collection of traditional and contemporary sarees crafted with love and precision.
-
-            </p>
-
-          </div>
-
-        </div>
+      <div className="min-h-screen bg-[#F9FAFB] pb-12">
 
         {/* Mobile filter drawer - outside stacking contexts */}
         {filterOpen && (
@@ -548,13 +360,83 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
 
           <div className="flex gap-8">
 
-            <aside className="hidden md:block w-72 shrink-0">
+            <aside className="hidden md:block w-64 shrink-0">
 
-              <div className="filter-card rounded-2xl p-6 border border-border/60 shadow-xl backdrop-blur-xl fade-up-2" style={{ background: 'hsl(var(--card)/0.85)' }}>
+              <div className="space-y-8">
 
-                <div className="mb-6">
+                <div>
 
-                  <div className="text-sm font-semibold mb-3">Price Range</div>
+                  <div className="text-base font-bold text-gray-900 mb-4">Category</div>
+
+                  <div className="space-y-2">
+
+                    <button
+
+                      onClick={() => setSelectedCategory('')}
+
+                      className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${!selectedCategory ? 'bg-[#10B981] text-white' : 'bg-[#F3F4F6] text-gray-700 hover:bg-[#E5E7EB]'}`}
+
+                    >
+
+                      All
+
+                    </button>
+
+                    {categories.map((cat) => (
+
+                      <button
+
+                        key={cat.id}
+
+                        onClick={() => setSelectedCategory(cat.slug)}
+
+                        className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${selectedCategory === cat.slug ? 'bg-[#10B981] text-white' : 'bg-[#F3F4F6] text-gray-700 hover:bg-[#E5E7EB]'}`}
+
+                      >
+
+                        {cat.name}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+
+
+                <div>
+
+                  <div className="text-base font-bold text-gray-900 mb-4">Highlight</div>
+
+                  <div className="space-y-2">
+
+                    {highlightFilters.map((f) => (
+
+                      <button
+
+                        key={f.key}
+
+                        onClick={() => setSelectedHighlight(selectedHighlight === f.key ? '' : f.key)}
+
+                        className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${selectedHighlight === f.key ? 'bg-[#10B981] text-white' : 'bg-[#F3F4F6] text-gray-700 hover:bg-[#E5E7EB]'}`}
+
+                      >
+
+                        {f.label}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <div className="text-base font-bold text-gray-900 mb-4">Price Range</div>
 
                   <div className="px-1">
 
@@ -572,7 +454,7 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
 
                     />
 
-                    <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                    <div className="flex justify-between mt-3 text-xs text-gray-500 font-medium">
 
                       <span>₹{priceRange[0].toLocaleString()}</span>
 
@@ -584,85 +466,11 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
 
                 </div>
 
-
-
-                <div className="mb-6">
-
-                  <div className="text-sm font-semibold mb-3">Category</div>
-
-                  <div className="space-y-2">
-
-                    <button
-
-                      onClick={() => setSelectedCategory('')}
-
-                      className={`w-full text-left px-4 py-2 rounded-lg text-sm transition-colors ${!selectedCategory ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
-
-                    >
-
-                      All
-
-                    </button>
-
-                    {categories.map((cat) => (
-
-                      <button
-
-                        key={cat.id}
-
-                        onClick={() => setSelectedCategory(cat.slug)}
-
-                        className={`w-full text-left px-4 py-2 rounded-lg text-sm transition-colors ${selectedCategory === cat.slug ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
-
-                      >
-
-                        {cat.name}
-
-                      </button>
-
-                    ))}
-
-                  </div>
-
-                </div>
-
-
-
-                <div className="mb-6">
-
-                  <div className="text-sm font-semibold mb-3">Highlight</div>
-
-                  <div className="space-y-2">
-
-                    {highlightFilters.map((f) => (
-
-                      <button
-
-                        key={f.key}
-
-                        onClick={() => setSelectedHighlight(selectedHighlight === f.key ? '' : f.key)}
-
-                        className={`w-full text-left px-4 py-2 rounded-lg text-sm transition-colors ${selectedHighlight === f.key ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
-
-                      >
-
-                        {f.label}
-
-                      </button>
-
-                    ))}
-
-                  </div>
-
-                </div>
-
-
-
                 {hasActiveFilters && (
 
-                  <button onClick={clearFilters} className="text-xs text-destructive hover:underline">
+                  <button onClick={clearFilters} className="text-sm text-red-500 hover:underline font-medium">
 
-                    Clear All
+                    Clear All Filters
 
                   </button>
 

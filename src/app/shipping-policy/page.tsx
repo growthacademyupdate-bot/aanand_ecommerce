@@ -1,6 +1,6 @@
 "use client";
 
-import { ShippingPolicy } from "@/pages/Policies";
+import { ShippingPolicy } from "@/views/Policies";
 
 export default function Page() {
   return <ShippingPolicy />;

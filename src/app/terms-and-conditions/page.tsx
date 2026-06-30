@@ -1,6 +1,6 @@
 "use client";
 
-import { TermsAndConditions } from "@/pages/Policies";
+import { TermsAndConditions } from "@/views/Policies";
 
 export default function Page() {
   return <TermsAndConditions />;

@@ -31,6 +31,8 @@ export interface AdminProduct {
   subcategoryId: string;
   categoryName?: string;
   subcategoryName?: string;
+  
+  productType?: 'simple' | 'variant' | 'legacy';
 
   mrp?: number;
   sellingPrice: number;
@@ -46,6 +48,12 @@ export interface AdminProduct {
   allowBackorders?: boolean;
 
   variants?: ProductVariant[];
+
+  // Legacy fields for backward compatibility
+  colors?: any[];
+  hasSizes?: boolean;
+  sizes?: any;
+  sizeQuantities?: any;
 
   featuredImage: string;
   images?: string[];
