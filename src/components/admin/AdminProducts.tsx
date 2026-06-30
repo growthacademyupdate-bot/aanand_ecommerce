@@ -1124,7 +1124,7 @@ const AdminProducts = () => {
                       (detailsProduct.colors || []).map((c, idx) => (
                         <div key={`${c.colorName}-${idx}`} className="rounded-lg border border-border p-3 text-sm">
                           <div className="font-medium mb-2">{c.colorName || '—'}</div>
-                          {c.hasSizes && c.sizes ? (
+                          {c.sizes && Object.keys(c.sizes).length > 0 ? (
                             <div className="space-y-1">
                               {Object.entries(c.sizes).map(([size, stock]) => (
                                 stock > 0 && (

@@ -288,7 +288,7 @@ const Cart = () => {
             <div className="lg:col-span-2 space-y-4">
               {cart.map((item, index) => (
                 <div 
-                  key={`${item.productId}-${item.color}`} 
+                  key={`${item.productId}-${item.color}-${item.size || ''}-${index}`} 
                   className="cart-card rounded-2xl p-6 border border-border/60 shadow-xl backdrop-blur-xl"
                   style={{ 
                     background: 'hsl(var(--card)/0.85)',
