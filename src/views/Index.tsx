@@ -85,6 +85,8 @@ const Index = () => {
 
   // ─── All state (declared once, in order) ──────────────────────────────────
   const [categories, setCategories] = useState<Category[]>([]);
+  const [subcategories, setSubcategories] = useState<any[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>('All');
   const [homeProducts, setHomeProducts] = useState<{
     featured: Product[];
     newArrivals: Product[];
@@ -190,7 +192,21 @@ const Index = () => {
         setCategories([]);
       }
     };
+    const fetchSubcategories = async () => {
+      try {
+        const response = await fetch('/api/subcategories');
+        const result = await response.json();
+        if (response.ok && result?.success && Array.isArray(result.data)) {
+          setSubcategories(result.data);
+        } else {
+          setSubcategories([]);
+        }
+      } catch {
+        setSubcategories([]);
+      }
+    };
     fetchCategories();
+    fetchSubcategories();
   }, []);
 
   // ─── Debounce search input (300ms) ────────────────────────────────────────
@@ -473,40 +489,93 @@ const Index = () => {
                 <p className="text-muted-foreground">No categories available.</p>
               </div>
             ) : (
-              <div className="relative overflow-hidden">
-                <style>{`
-                  @keyframes categoriesMarqueeLTR {
-                    0% { transform: translateX(-50%); }
-                    100% { transform: translateX(0%); }
-                  }
-                  .categories-marquee:hover .categories-track {
-                    animation-play-state: paused;
-                  }
-                `}</style>
-                <div className="categories-marquee flex w-max gap-3 sm:gap-4">
-                  <div
-                    className="categories-track flex w-max gap-3 sm:gap-4"
-                    style={{ animation: 'categoriesMarqueeLTR 28s linear infinite' }}
+              <div className="flex flex-col items-center gap-8 w-full">
+                {/* Category Pill Buttons */}
+                <div className="flex flex-wrap justify-center gap-3 w-full px-4">
+                  <button
+                    onClick={() => setSelectedCategoryId('All')}
+                    className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                      selectedCategoryId === 'All'
+                        ? 'bg-primary text-primary-foreground shadow-md scale-105'
+                        : 'bg-secondary/50 text-secondary-foreground hover:bg-secondary'
+                    }`}
                   >
-                    {[...categories, ...categories].map((cat, idx) => (
-                      <Link
-                        key={`${cat.id}-${idx}`}
-                        href={`/products?category=${cat.slug}`}
-                        className="group/item flex-shrink-0 w-[120px] sm:w-[140px] md:w-[160px] lg:w-[170px] relative aspect-square rounded-full overflow-hidden card-hover border border-border/30"
-                      >
-                        <img
-                          src={cat.image}
-                          alt={cat.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent flex items-end justify-center p-3">
-                          <span className="text-background font-display font-semibold text-xs sm:text-sm text-center leading-tight">
-                            {cat.name}
-                          </span>
+                    All
+                  </button>
+                  {categories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setSelectedCategoryId(cat.id)}
+                      className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                        selectedCategoryId === cat.id
+                          ? 'bg-primary text-primary-foreground shadow-md scale-105'
+                          : 'bg-secondary/50 text-secondary-foreground hover:bg-secondary'
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Subcategories Sliding Marquee */}
+                <div className="relative overflow-hidden w-full max-w-7xl mx-auto pt-4">
+                  <style>{`
+                    @keyframes subcategoriesMarqueeLTR {
+                      0% { transform: translateX(0%); }
+                      100% { transform: translateX(-50%); }
+                    }
+                    .categories-marquee:hover .categories-track {
+                      animation-play-state: paused;
+                    }
+                  `}</style>
+                  {(() => {
+                    const activeSubcategories = selectedCategoryId === 'All' 
+                      ? subcategories 
+                      : subcategories.filter(sub => sub.categoryId === selectedCategoryId);
+                    
+                    if (activeSubcategories.length === 0) {
+                      return (
+                         <div className="text-center py-8 text-muted-foreground">
+                           No subcategories found.
+                         </div>
+                      );
+                    }
+
+                    // Duplicate for seamless loop if there are enough, else just show them
+                    const displayItems = activeSubcategories.length < 4 
+                      ? activeSubcategories 
+                      : [...activeSubcategories, ...activeSubcategories];
+
+                    return (
+                      <div className="categories-marquee flex w-max gap-4 sm:gap-6 pb-6">
+                        <div
+                          className="categories-track flex w-max gap-4 sm:gap-6"
+                          style={{ 
+                            animation: activeSubcategories.length >= 4 ? 'subcategoriesMarqueeLTR 30s linear infinite' : 'none' 
+                          }}
+                        >
+                          {displayItems.map((sub, idx) => (
+                            <Link
+                              key={`${sub.id}-${idx}`}
+                              href={`/products?category=${sub.categorySlug}&subcategoryId=${sub.id}`}
+                              className="group/item flex-shrink-0 w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] relative aspect-square rounded-full overflow-hidden card-hover border border-border/30 shadow-sm"
+                            >
+                              <img
+                                src={sub.image || '/placeholder.svg'}
+                                alt={sub.name}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent flex items-end justify-center p-4">
+                                <span className="text-background font-display font-medium text-sm sm:text-base text-center leading-tight drop-shadow-md">
+                                  {sub.name}
+                                </span>
+                              </div>
+                            </Link>
+                          ))}
                         </div>
-                      </Link>
-                    ))}
-                  </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             )}

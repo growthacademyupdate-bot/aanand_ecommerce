@@ -192,11 +192,16 @@ export function buildProductQuery(params: {
   minPrice?: number;
   maxPrice?: number;
   size?: string;
+  subcategoryId?: string;
 }): Record<string, unknown> {
   const filter: Record<string, unknown> = { hidden: { $ne: true } };
 
   if (params.category) {
     filter.category = { $regex: `^${params.category}$`, $options: 'i' };
+  }
+
+  if (params.subcategoryId) {
+    filter.subcategoryId = params.subcategoryId;
   }
 
   if (params.search) {

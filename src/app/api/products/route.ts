@@ -34,11 +34,12 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get('search')?.trim() || '';
   const sortBy = searchParams.get('sort')?.trim() || '';
   const size = searchParams.get('size')?.trim() || '';
+  const subcategoryId = searchParams.get('subcategoryId')?.trim() || '';
   const inStock = searchParams.get('inStock') !== 'false';
   const minPrice = searchParams.has('minPrice') ? Number(searchParams.get('minPrice')) : undefined;
   const maxPrice = searchParams.has('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined;
 
-  const cacheKey = `products:v2:list:${page}:${limit}:${category}:${highlight}:${search}:${sortBy}:${size}:${inStock}:${minPrice ?? ''}:${maxPrice ?? ''}`;
+  const cacheKey = `products:v2:list:${page}:${limit}:${category}:${subcategoryId}:${highlight}:${search}:${sortBy}:${size}:${inStock}:${minPrice ?? ''}:${maxPrice ?? ''}`;
   const cacheTTL = 300;
 
   try {
@@ -48,6 +49,7 @@ export async function GET(request: NextRequest) {
       const collection = database.collection('products');
       const filter = buildProductQuery({
         category: category || undefined,
+        subcategoryId: subcategoryId || undefined,
         highlight: highlight || undefined,
         search: search || undefined,
         size: size || undefined,

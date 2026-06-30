@@ -38,7 +38,7 @@ const highlightFilters = [
 
 
 
-const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCategory?: string; initialHighlight?: string }) => {
+const Products = ({ initialCategory = '', initialHighlight = '', initialSubcategoryId = '' }: { initialCategory?: string; initialHighlight?: string; initialSubcategoryId?: string }) => {
 
   const storeCategories = useStore((s) => s.categories);
 
@@ -47,7 +47,7 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
   const [categories, setCategories] = useState<Category[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(initialSubcategoryId);
   const [selectedHighlight, setSelectedHighlight] = useState(initialHighlight);
 
   const [sortBy, setSortBy] = useState('');
@@ -73,9 +73,8 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
   const clearFilters = () => {
 
     setSelectedCategory('');
-
+    setSelectedSubcategoryId('');
     setSelectedHighlight('');
-
     setSelectedSize('');
 
     setAvailableSizes([]);
@@ -92,7 +91,7 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
 
 
 
-  const hasActiveFilters = selectedCategory || selectedHighlight || selectedSize || searchQuery || priceRange[0] > 0 || priceRange[1] < maxPrice;
+  const hasActiveFilters = selectedCategory || selectedSubcategoryId || selectedHighlight || selectedSize || searchQuery || priceRange[0] > 0 || priceRange[1] < maxPrice;
 
 
 
@@ -103,7 +102,7 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
 
   useEffect(() => {
     setPage(1);
-  }, [selectedCategory, selectedSize, selectedHighlight, sortBy, searchQuery, priceRange]);
+  }, [selectedCategory, selectedSubcategoryId, selectedSize, selectedHighlight, sortBy, searchQuery, priceRange]);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -113,6 +112,7 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
         params.set('page', String(page));
         params.set('limit', String(pageSize));
         if (selectedCategory) params.set('category', selectedCategory);
+        if (selectedSubcategoryId) params.set('subcategoryId', selectedSubcategoryId);
         if (selectedHighlight) params.set('highlight', selectedHighlight);
         if (searchQuery.trim()) params.set('search', searchQuery.trim());
         if (sortBy) params.set('sort', sortBy);
@@ -140,7 +140,7 @@ const Products = ({ initialCategory = '', initialHighlight = '' }: { initialCate
       }
     };
     void loadProducts();
-  }, [page, selectedCategory, selectedSize, selectedHighlight, sortBy, searchQuery, priceRange, maxPrice]);
+  }, [page, selectedCategory, selectedSubcategoryId, selectedSize, selectedHighlight, sortBy, searchQuery, priceRange, maxPrice]);
 
   useEffect(() => {
     const fetchCategories = async () => {
