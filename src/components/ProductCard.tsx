@@ -1,4 +1,4 @@
-import { Heart, ShoppingCart } from 'lucide-react';
+import { Heart, ShoppingBag, Eye, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -11,11 +11,7 @@ interface ProductCardProps {
   product: Product;
 }
 
-let productCardRenderCount = 0;
-
 const ProductCard = ({ product }: ProductCardProps) => {
-  productCardRenderCount++;
-  console.log(`[DEBUG] ProductCard (ID: ${product.id}) Render Count: ${productCardRenderCount}`);
   const { addToCart, toggleWishlist, wishlist } = useStore();
   const isWished = wishlist.includes(product.id);
   const discount =
@@ -100,15 +96,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
     e.preventDefault();
     e.stopPropagation();
     toggleWishlist(product.id);
-    toast({ title: isWished ? 'Removed from wishlist' : 'Added to wishlist', description: product.name });
+    if (!isWished) {
+      toast({
+        title: 'Added to Wishlist',
+        description: `${product.name} saved for later.`,
+      });
+    }
   };
 
   return (
-    <Link href={`/product/${product.slug}`} className="group block">
-      <div ref={containerRef} className="bg-white rounded-xl overflow-hidden border border-gray-200 transition-all hover:shadow-md">
-        <div className="relative aspect-[3/4] overflow-hidden bg-gray-50">
+    <Link href={`/product/${product.id}`} className="group block h-full">
+      <div ref={containerRef} className="bg-card rounded-[18px] h-full flex flex-col overflow-hidden border border-border transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1">
+        <div className="relative aspect-[3/4] overflow-hidden bg-muted">
           {!imgLoaded && (
-            <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+            <div className="absolute inset-0 bg-muted animate-pulse" />
           )}
           {isNearViewport && (
             <Image
@@ -122,94 +123,117 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 setImageSrc('/placeholder.svg');
                 setImgLoaded(true);
               }}
-              className={`object-cover transition-transform duration-500 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-cover transition-transform duration-700 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
           )}
           <div className="absolute top-3 left-3 right-3 z-20 flex items-start justify-between gap-2">
-            {/* Prebooking badge */}
-            {product.isPrebooking && (
-              <PrebookingBadge 
-                deliveryDays={product.prebookingDeliveryDays || 12} 
-                className="max-w-[48%]"
-              />
-            )}
-            
-            {/* Sale/Discount badge */}
-            {!product.isPrebooking && discount > 0 ? (
-              <span className="bg-[#e11d48] text-white text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-sm max-w-[48%] truncate">
-                {product.isSale ? `${discount}% OFF` : `${discount}% OFF`}
-              </span>
-            ) : (
-              !product.isPrebooking && <span />
-            )}
+            <div className="flex flex-col gap-2">
+              {/* Prebooking badge */}
+              {product.isPrebooking && (
+                <PrebookingBadge 
+                  deliveryDays={product.prebookingDeliveryDays || 12} 
+                  className="max-w-full"
+                />
+              )}
+              
+              {/* Sale/Discount badge */}
+              {!product.isPrebooking && discount > 0 && (
+                <span className="bg-secondary text-secondary-foreground text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-sm w-max">
+                  {discount}% OFF
+                </span>
+              )}
 
-            {/* Limited Offer badge - positioned above sale badge */}
-            {!product.isPrebooking && product.isLimitedOffer && (
-              <span className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-md animate-pulse max-w-[48%] truncate">
-                <span className="sm:hidden">LIMITED</span>
-                <span className="hidden sm:inline">LIMITED OFFER</span>
-              </span>
-            )}
+              {/* Limited Offer badge */}
+              {!product.isPrebooking && product.isLimitedOffer && (
+                <span className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-md animate-pulse w-max">
+                  <span className="sm:hidden">LIMITED</span>
+                  <span className="hidden sm:inline">LIMITED OFFER</span>
+                </span>
+              )}
+            </div>
+            
+            <button 
+              onClick={handleToggleWishlist} 
+              className="p-2 bg-card/80 backdrop-blur-md rounded-full text-muted-foreground hover:text-secondary hover:bg-card shadow-sm transition-all z-20"
+            >
+              <Heart className={`h-4 w-4 ${isWished ? 'fill-secondary text-secondary' : ''}`} />
+            </button>
           </div>
+
           {product.isNew && (
-            <span className="absolute bottom-3 right-3 bg-[#10B981] text-white text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+            <span className="absolute bottom-3 right-3 bg-primary text-primary-foreground text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-sm z-20">
               NEW
             </span>
           )}
-          {/* Hover overlay */}
-          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
-            <button onClick={handleAddToCart} className="bg-white text-gray-900 p-3 rounded-full hover:bg-[#10B981] hover:text-white transition-colors shadow-lg" title="Add to Cart">
-              <ShoppingCart className="h-5 w-5" />
-            </button>
-            <button onClick={handleToggleWishlist} className={`p-3 rounded-full shadow-lg transition-colors ${isWished ? 'bg-[#e11d48] text-white' : 'bg-white text-gray-900 hover:bg-[#e11d48] hover:text-white'}`} title="Wishlist">
-              <Heart className="h-5 w-5" fill={isWished ? 'currentColor' : 'none'} />
+
+          {/* Hover overlay for cart */}
+          <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/50 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-center gap-3 z-10">
+            <button 
+              onClick={handleAddToCart} 
+              className="w-full bg-card text-foreground py-2.5 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors shadow-lg"
+            >
+              <ShoppingBag className="h-4 w-4" /> Add to Cart
             </button>
           </div>
         </div>
-        <div className="p-4 bg-white">
-          <h3 className="font-medium text-gray-900 text-sm truncate">{product.name}</h3>
-          <div className="flex items-center gap-2 mt-1.5">
-            <span className="text-[#10B981] font-bold text-base">
-              Rs{(product.isPrebooking ? (product.prebookingPrice || product.price) : product.price).toLocaleString()}
-            </span>
-            {product.comparePrice > product.price && (
-              <span className="text-gray-400 text-sm line-through">Rs{product.comparePrice.toLocaleString()}</span>
-            )}
+
+        <div className="p-4 md:p-5 flex flex-col flex-grow bg-card">
+          <div className="flex items-center gap-1 text-accent mb-2">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="h-3 w-3 fill-current" />
+            ))}
+            <span className="text-[10px] text-muted-foreground ml-1">(4.8)</span>
           </div>
-          
-          {/* Prebooking message */}
-          {product.isPrebooking && (
-            <div className="mt-2 space-y-1">
-              <div className="flex items-center gap-1 text-xs font-medium text-purple-600">
-                <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                {product.prebookingMessage || 'Prebook now - Limited availability!'}
-              </div>
-              <div className="text-xs text-purple-700">
-                Expected delivery: {product.prebookingDeliveryDays || 10}-{(product.prebookingDeliveryDays || 10) + 5} days
-              </div>
-            </div>
-          )}
-          
-          {product.cardOfferText && !product.isPrebooking && (
-            <div className="mt-2 flex justify-end">
-              <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 border border-blue-100">
-                {product.cardOfferText}
+
+          <h3 className="font-display font-semibold text-base md:text-lg text-foreground line-clamp-1 mb-1 group-hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+
+          <div className="mt-auto pt-3 flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-lg md:text-xl text-primary">
+                ₹{(product.isPrebooking ? (product.prebookingPrice || product.price) : product.price).toLocaleString()}
               </span>
-            </div>
-          )}
-          {!product.isPrebooking && product.isLimitedOffer && (
-            <div className="mt-2 space-y-1">
-              <div className="flex items-center gap-1 text-xs font-medium text-orange-600">
-                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                {product.limitedOfferMessage || 'Hurry! Limited stock available!'}
-              </div>
-              {product.limitedStock && (
-                <div className="text-xs text-orange-700 font-semibold">
-                  Only {product.limitedStock} left!
-                </div>
+              {product.comparePrice && product.comparePrice > product.price && (
+                <span className="text-sm text-muted-foreground line-through">₹{product.comparePrice.toLocaleString()}</span>
               )}
             </div>
-          )}
+            
+            {/* Prebooking message */}
+            {product.isPrebooking && (
+              <div className="space-y-1">
+                <div className="flex items-center gap-1 text-xs font-medium text-accent">
+                  <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
+                  {product.prebookingMessage || 'Prebook now - Limited availability!'}
+                </div>
+                <div className="text-[10px] text-muted-foreground">
+                  Expected delivery: {product.prebookingDeliveryDays || 10}-{(product.prebookingDeliveryDays || 10) + 5} days
+                </div>
+              </div>
+            )}
+            
+            {product.cardOfferText && !product.isPrebooking && (
+              <div className="flex justify-start">
+                <span className="inline-flex items-center rounded-md bg-secondary/10 px-2 py-1 text-[10px] font-semibold text-secondary border border-secondary/20">
+                  {product.cardOfferText}
+                </span>
+              </div>
+            )}
+
+            {!product.isPrebooking && product.isLimitedOffer && (
+              <div className="space-y-1 mt-1">
+                <div className="flex items-center gap-1 text-[10px] font-medium text-orange-600">
+                  <span className="w-1.5 h-1.5 bg-destructive rounded-full animate-pulse"></span>
+                  {product.limitedOfferMessage || 'Hurry! Limited stock!'}
+                </div>
+                {product.limitedStock && (
+                  <div className="text-[10px] text-orange-700 font-semibold">
+                    Only {product.limitedStock} left!
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Link>

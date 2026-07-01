@@ -239,9 +239,9 @@ const Index = () => {
 
   // ─── Hero images array ───────────────────────────────────────────────────
   const heroImages = [
-    '/home_img_2.png',
-    '/HeroMorphank1.png',
-    '/HeroMorphank.png',
+    '/Hero section Banner image.png',
+    '/Hero section Banner image 2.png',
+    '/Hero section banner image 3.png',
   ];
 
   // ─── Slider navigation handlers ───────────────────────────────────────────
@@ -329,25 +329,33 @@ const Index = () => {
     <PublicLayout>
 
       {/* Hero Slider */}
-      <section className="relative overflow-hidden">
-        <div className="relative w-full">
-          <img
-            src={heroImages[currentSlide]}
-            alt="Morpankh Saree - Traditional Indian Sarees"
-            className="w-full h-auto object-contain"
-          />
+      <section className="relative overflow-hidden group">
+        <div className="relative w-full overflow-hidden bg-muted/10">
+          <div
+            className="flex transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {heroImages.map((src, idx) => (
+              <img
+                key={idx}
+                src={src}
+                alt={`Morpankh Banner ${idx + 1}`}
+                className="w-full h-auto object-contain flex-shrink-0"
+              />
+            ))}
+          </div>
           
           {/* Previous/Next Arrows */}
           <button
             onClick={goToPrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors z-10"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 md:p-3 rounded-full transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 hover:scale-110"
             aria-label="Previous slide"
           >
             <ChevronRight className="h-6 w-6 rotate-180" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors z-10"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 md:p-3 rounded-full transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 hover:scale-110"
             aria-label="Next slide"
           >
             <ChevronRight className="h-6 w-6" />
@@ -369,62 +377,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Search Box */}
-      <div className="mt-10">
-        <div id="search-box" className="max-w-md mx-auto relative">
-          <input
-            type="text"
-            placeholder="Search products or categories..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-primary rounded-xl bg-white/95 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary focus:shadow-lg outline-none placeholder:text-muted-foreground/70 shadow-sm"
-          />
 
-          {/* Dropdown — quick-peek for 1-2 char queries only */}
-          {showDropdown && (
-            <div className="absolute top-full mt-2 w-full bg-card border border-border rounded-xl shadow-lg z-50 max-h-[350px] overflow-y-auto">
-              {filteredCategories.length > 0 && (
-                <div className="p-3 border-b border-border">
-                  <p className="text-xs text-muted-foreground mb-2">Categories</p>
-                  {filteredCategories.slice(0, 4).map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={`/products?category=${cat.slug}`}
-                      onClick={() => setSearchQuery('')}
-                      className="block px-3 py-2 rounded-lg hover:bg-muted text-sm"
-                    >
-                      {cat.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-              {filteredProducts.length > 0 && (
-                <div className="p-3">
-                  <p className="text-xs text-muted-foreground mb-2">Products</p>
-                  {filteredProducts.slice(0, 4).map((p) => (
-                    <Link
-                      key={p.id}
-                      href={`/product/${p.id}`}
-                      onClick={() => setSearchQuery('')}
-                      className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted"
-                    >
-                      <img
-                        src={p.images?.[0]}
-                        alt={p.name}
-                        className="w-10 h-10 object-cover rounded"
-                      />
-                      <span className="text-sm">{p.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-              {filteredCategories.length === 0 && filteredProducts.length === 0 && (
-                <p className="p-4 text-sm text-muted-foreground text-center">No results found</p>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* ── Full search results (>2 chars) OR homepage sections ── */}
       {isFullSearch ? (
@@ -497,7 +450,7 @@ const Index = () => {
                     className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
                       selectedCategoryId === 'All'
                         ? 'bg-primary text-primary-foreground shadow-md scale-105'
-                        : 'bg-secondary/50 text-secondary-foreground hover:bg-secondary'
+                        : 'bg-muted text-foreground hover:bg-primary/10'
                     }`}
                   >
                     All
@@ -509,7 +462,7 @@ const Index = () => {
                       className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
                         selectedCategoryId === cat.id
                           ? 'bg-primary text-primary-foreground shadow-md scale-105'
-                          : 'bg-secondary/50 text-secondary-foreground hover:bg-secondary'
+                          : 'bg-muted text-foreground hover:bg-primary/10'
                       }`}
                     >
                       {cat.name}
@@ -587,45 +540,49 @@ const Index = () => {
             subtitle="Hurry up! Limited stock available"
             items={limitedOfferProducts}
             filterParam="limited"
-            bg="bg-orange-50/40"
+            bg="bg-muted/50"
           />
           <ProductSection
             title="Live Special"
             subtitle="Exclusive live deals for you"
             items={liveSpecialProducts}
             filterParam="liveSpecial"
-            bg="bg-purple-50/40"
+            bg="bg-background"
           />
           <ProductSection
             title="Best Sellers"
             subtitle="Our most loved sarees"
             items={bestSellers}
             filterParam="featured"
+            bg="bg-muted/30"
           />
           <ProductSection
             title="New Arrivals"
             subtitle="Fresh additions to our collection"
             items={newArrivals}
             filterParam="new"
+            bg="bg-background"
           />
           <ProductSection
             title="Sale"
             subtitle="Grab these deals before they're gone"
             items={saleProducts}
             filterParam="sale"
-            bg="bg-muted"
+            bg="bg-muted/50"
           />
           <ProductSection
             title="Premium Sarees"
             subtitle="Luxury craftsmanship for special occasions"
             items={premiumSarees}
             filterParam="premium"
+            bg="bg-background"
           />
           <ProductSection
             title="Trending Sarees"
             subtitle="What's popular right now"
             items={trendingSarees}
             filterParam="trending"
+            bg="bg-muted/30"
           />
         </>
       )}
@@ -790,20 +747,26 @@ const Index = () => {
       )}
 
       {/* CTA — always visible */}
-      <section className="py-16 gradient-hero text-center">
-        <div className="container mx-auto px-4">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-            Discover Your Perfect Saree
-          </h2>
-          <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
-            Browse our complete collection of handcrafted sarees from across India
-          </p>
-          <Link
-            href="/products"
-            className="inline-block bg-card text-foreground px-8 py-3 rounded-lg font-medium hover:bg-card/90 transition-colors"
-          >
-            Browse All Products
-          </Link>
+      <section className="py-24 relative overflow-hidden bg-background">
+        {/* Subtle pattern or image (optional, removing for clean white look as requested) */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1610116306796-6fea9f4fae38?q=80&w=2000&auto=format&fit=crop')] opacity-5 bg-cover bg-fixed bg-center -z-10 mix-blend-multiply"></div>
+        
+        <div className="container mx-auto px-6 text-center z-10">
+          <div className="max-w-3xl mx-auto bg-card border border-border/50 rounded-[32px] p-8 md:p-12 shadow-xl shadow-primary/5">
+            <span className="text-primary font-bold tracking-widest uppercase text-xs mb-4 inline-block">Experience Luxury</span>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+              Discover Your <span className="text-primary italic">Perfect Saree</span>
+            </h2>
+            <p className="text-muted-foreground text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+              Browse our complete collection of handcrafted sarees from across India. Elevate your wardrobe with timeless elegance.
+            </p>
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-1"
+            >
+              Browse All Products <ChevronRight className="h-5 w-5" />
+            </Link>
+          </div>
         </div>
       </section>
 

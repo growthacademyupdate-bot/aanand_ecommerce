@@ -69,6 +69,8 @@ export default {
         "royal-purple": "hsl(var(--royal-purple))",
         magenta: "hsl(var(--magenta))",
         gold: "hsl(var(--gold))",
+        "dark-green": "hsl(var(--dark-green))",
+        cream: "hsl(var(--cream))",
       },
       borderRadius: {
         lg: "var(--radius)",
