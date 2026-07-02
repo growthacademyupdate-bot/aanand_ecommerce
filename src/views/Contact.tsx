@@ -110,7 +110,7 @@ const Contact = () => {
           {/* banner text */}
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
             <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-              Morpankh Saree · Support
+              Anand Wholesale · Support
             </p>
             <h2 className="text-4xl font-bold mb-2">Contact Us</h2>
             <p className="text-white/70 text-sm max-w-md">
@@ -127,7 +127,7 @@ const Contact = () => {
           <div className="text-center mb-14 fade-up-1">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs font-medium tracking-wide mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              Morpankh Saree
+              Anand Wholesale
             </div>
             <h1 className="text-5xl font-bold mb-4" style={{ color: 'hsl(var(--primary))' }}>
               

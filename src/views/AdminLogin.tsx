@@ -114,7 +114,7 @@ const AdminLogin = () => {
         </h2>
 
         <p className="text-white/70 text-sm max-w-sm">
-          Access Morpankh admin panel securely with OTP verification and encrypted authentication.
+          Access Anand Wholesale admin panel securely with OTP verification and encrypted authentication.
         </p>
 
         {/* small stats */}

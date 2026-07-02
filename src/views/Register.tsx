@@ -70,7 +70,7 @@ const Register = () => {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         login(data.user, data.token);
-        toast({ title: 'Account verified successfully! Welcome to Morpankh Saree.' });
+        toast({ title: 'Account verified successfully! Welcome to Anand Wholesale.' });
         router.push('/');
       } else {
         toast({ title: data.error, variant: 'destructive' });
@@ -241,11 +241,11 @@ const Register = () => {
         {/* TEXT */}
         <div className="relative z-10 flex flex-col py-20 px-12 text-white">
           <div className="flex justify-start gap-2 mb-6">
-            <Image src="/favicon.png" alt="Morpankh Saree" width={200} height={200} />
+            <Image src="/favicon.png" alt="Anand Wholesale" width={200} height={200} />
           </div>
           <h2 className="text-4xl font-bold mb-4">
             Join<br />
-            <span className="text-white/80">Morpankh Saree</span>
+            <span className="text-white/80">Anand Wholesale</span>
           </h2>
           <p className="text-white/70 text-sm">
             Create your account and explore premium sarees.

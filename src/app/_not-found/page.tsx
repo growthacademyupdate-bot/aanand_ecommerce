@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Page Not Found - Morpankh Saree',
+  title: 'Page Not Found - Anand Wholesale',
   description: 'The page you are looking for does not exist.',
 };
 

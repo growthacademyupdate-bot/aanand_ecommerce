@@ -115,7 +115,7 @@ const Navbar = () => {
             <div className="flex items-center justify-between h-20 gap-4 md:gap-8 relative">
               <Link href="/" className="shrink-0 relative w-[130px] h-full">
                 <div className="absolute top-0 left-0 z-50">
-                  <Image src={logo} alt="Morpankh Saree" height={130} width={130} className="object-contain drop-shadow-md" />
+                  <Image src={logo} alt="Anand Wholesale" height={130} width={130} className="object-contain drop-shadow-md" />
                 </div>
               </Link>
 
@@ -320,8 +320,8 @@ const Navbar = () => {
             >
               <div className="flex items-center justify-between p-5 border-b border-border bg-muted/30">
                 <Link href="/" className="flex items-center gap-3" onClick={() => setMobileOpen(false)}>
-                  <Image src={logo} alt="Morpankh Saree" height={40} width={40} className="object-contain" />
-                  <span className="text-lg font-display font-bold text-primary">Morpankh</span>
+                  <Image src={logo} alt="Anand Wholesale" height={40} width={40} className="object-contain" />
+                  <span className="text-lg font-display font-bold text-primary">Anand Wholesale</span>
                 </Link>
                 <button onClick={() => setMobileOpen(false)} className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors">
                   <X className="h-5 w-5" />

@@ -131,7 +131,7 @@
 //           </div>
 //           <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
 //             <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-//               Morpankh Saree · Gallery
+//               Anand Wholesale · Gallery
 //             </p>
 //             <h2 className="text-4xl font-bold mb-2">Gallery</h2>
 //             <p className="text-white/70 text-sm max-w-md">
@@ -170,7 +170,7 @@
 //                     className="w-24 h-24 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-inner logo-pulse"
 //                     style={{ background: 'hsl(var(--primary)/0.08)' }}
 //                   >
-//                     <Image src={logo} alt="Morpankh Logo" height={72} width={72} className="rounded-xl" />
+//                     <Image src={logo} alt="Anand Wholesale Logo" height={72} width={72} className="rounded-xl" />
 //                   </div>
 //                 </div>
 //                 <div className="space-y-4">
@@ -445,7 +445,7 @@ export default function Page() {
           <div className="absolute" style={{bottom:'15%',left:'18%',animation:'float3 7s ease-in-out infinite'}}><div className="w-8 h-8 rounded-lg rotate-45 border border-white/20" /></div>
           <div className="absolute" style={{top:'20%',right:'25%',animation:'spinSlow 18s linear infinite'}}><div className="w-20 h-20 rounded-full border border-dashed border-white/15" /></div>
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
-            <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">Morpankh Saree · Gallery</p>
+            <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">Anand Wholesale · Gallery</p>
             <h2 className="text-4xl font-bold mb-2">Gallery</h2>
             <p className="text-white/70 text-sm max-w-md">Explore our beautiful shop collection showcasing our finest products and store atmosphere.</p>
           </div>
@@ -469,7 +469,7 @@ export default function Page() {
                 <div className="relative inline-block mb-6">
                   <div className="absolute inset-0 rounded-full spin-ring" style={{border:'2px dashed hsl(var(--primary)/0.25)',margin:'-12px'}} />
                   <div className="w-24 h-24 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-inner logo-pulse" style={{background:'hsl(var(--primary)/0.08)'}}>
-                    <Image src={logo} alt="Morpankh Logo" height={72} width={72} className="rounded-xl" />
+                    <Image src={logo} alt="Anand Wholesale Logo" height={72} width={72} className="rounded-xl" />
                   </div>
                 </div>
                 <div className="space-y-4">
@@ -602,7 +602,7 @@ export default function Page() {
             {/* CTA to YouTube channel */}
             <div className="text-center mt-10">
               <a
-                href="https://www.youtube.com/@Morpankhsaree" /* ← Replace with your YouTube channel URL */
+                href="https://www.youtube.com/@anandwholesale" /* ← Replace with your YouTube channel URL */
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:shadow-xl"

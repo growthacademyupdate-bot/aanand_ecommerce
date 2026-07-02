@@ -20,7 +20,7 @@ const OrderSuccess = () => {
           </p>
         )}
         <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-          Thank you for shopping with Morpankh Saree. Your order has been confirmed and you'll receive updates via email.
+          Thank you for shopping with Anand Wholesale. Your order has been confirmed and you'll receive updates via email.
         </p>
         <div className="flex gap-4 justify-center">
           <Link href="/products" className="btn-primary">Continue Shopping</Link>

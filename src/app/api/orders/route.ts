@@ -248,16 +248,16 @@ async function sendInvoiceEmail(order: OrderDoc): Promise<boolean> {
       .join('');
 
     const mailOptions = {
-      from: `"Morpankh Saree" <${process.env.EMAIL_HOST_USER}>`,
+      from: `"Anand Wholesale" <${process.env.EMAIL_HOST_USER}>`,
       to: order.customerEmail,
-      subject: `Order Confirmation - ${order.orderNumber} | Morpankh Saree`,
+      subject: `Order Confirmation - ${order.orderNumber} | Anand Wholesale`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
           <div style="background-color: white; border-radius: 8px; padding: 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
             
             <!-- Header -->
             <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #dbeafe; padding-bottom: 20px;">
-              <h1 style="margin: 0; color: #1f2937; font-size: 28px;">Morpankh Saree</h1>
+              <h1 style="margin: 0; color: #1f2937; font-size: 28px;">Anand Wholesale</h1>
               <p style="margin: 5px 0 0; color: #6b7280; font-size: 14px;">Celebrating Indian Tradition</p>
             </div>
 
@@ -338,9 +338,9 @@ async function sendInvoiceEmail(order: OrderDoc): Promise<boolean> {
 
             <!-- Footer -->
             <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-              <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">Thank you for shopping with Morpankh Saree!</p>
+              <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">Thank you for shopping with Anand Wholesale!</p>
               <p style="margin: 0; color: #9ca3af; font-size: 12px;">
-                This is an automated email. Please do not reply. For any queries, contact us at support@morpankh.com
+                This is an automated email. Please do not reply. For any queries, contact us at support@anandwholesale.com
               </p>
             </div>
 

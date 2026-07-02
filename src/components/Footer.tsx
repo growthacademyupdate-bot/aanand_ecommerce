@@ -40,7 +40,7 @@ const Footer = () => {
               </div>
               <h4 className="font-display text-2xl font-bold mb-2 text-[#800020]">Anand Wholesale</h4>
               <p className="text-[#800020] text-sm leading-relaxed mb-4 font-semibold italic">
-                "परंपरेचा मोरपंखी स्पर्श, सौंदर्याची नवी ओळख"
+                "परंपरेचा आनंद होलसेल, सौंदर्याची नवी ओळख"
               </p>
               <p className="text-[#800020]/80 text-sm leading-relaxed">
                 We are dedicated to bringing you the finest collection of traditional and contemporary sarees, crafted with attention to detail and quality.

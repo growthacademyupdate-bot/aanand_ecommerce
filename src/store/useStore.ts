@@ -546,7 +546,7 @@ export const useStore = create<StoreState>()(
               user: isAdmin ? {
                 id: 'admin',
                 name: 'Admin',
-                email: 'admin@morpankh.com',
+                email: 'admin@anandwholesale.com',
                 verified: true
               } : JSON.parse(atob(token.split('.')[1])),
               token,
@@ -573,7 +573,7 @@ export const useStore = create<StoreState>()(
       },
     }),
     {
-      name: 'morpankh-store',
+      name: 'anand-wholesale-store',
       partialize: (state) => ({
         cart: state.cart,
         wishlist: state.wishlist,

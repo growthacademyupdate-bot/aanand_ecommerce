@@ -35,12 +35,12 @@ export async function POST(request: NextRequest) {
     console.log('✓ SMTP connection verified successfully');
 
     const mailOptions = {
-      from: `"Morpankh Saree" <${process.env.EMAIL_HOST_USER}>`,
+      from: `"Anand Wholesale" <${process.env.EMAIL_HOST_USER}>`,
       to: email,
-      subject: 'Test Email - Morpankh Saree',
+      subject: 'Test Email - Anand Wholesale',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #1f2937;">Test Email from Morpankh Saree</h2>
+          <h2 style="color: #1f2937;">Test Email from Anand Wholesale</h2>
           <p style="color: #4b5563;">This is a test email to verify that your email configuration is working correctly.</p>
           <p style="color: #4b5563;">If you received this email, your email settings are configured properly!</p>
           <div style="background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin-top: 20px;">

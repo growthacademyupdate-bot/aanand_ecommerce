@@ -98,7 +98,7 @@ const AdminOrders = () => {
       const printContent = `
         <div style="font-family: Arial, sans-serif; margin: 20px;">
           <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #dbeafe; padding-bottom: 20px;">
-            <h1 style="margin: 0; color: #1f2937; font-size: 28px;">Morpankh Saree</h1>
+            <h1 style="margin: 0; color: #1f2937; font-size: 28px;">Anand Wholesale</h1>
             <p style="margin: 5px 0 0; color: #6b7280; font-size: 14px;">Celebrating Indian Tradition</p>
           </div>
           
@@ -186,9 +186,9 @@ const AdminOrders = () => {
           </div>
 
           <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-            <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">Thank you for shopping with Morpankh Saree!</p>
+            <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">Thank you for shopping with Anand Wholesale!</p>
             <p style="margin: 0; color: #9ca3af; font-size: 12px;">
-              This is a computer-generated invoice. For any queries, contact us at support@morpankh.com
+              This is a computer-generated invoice. For any queries, contact us at support@anandwholesale.com
             </p>
           </div>
         </div>
@@ -199,7 +199,7 @@ const AdminOrders = () => {
         printWindow.document.write(`
           <html>
             <head>
-              <title>Order Invoice - ${orderData.orderNumber} | Morpankh Saree</title>
+              <title>Order Invoice - ${orderData.orderNumber} | Anand Wholesale</title>
               <style>
                 body { font-family: Arial, sans-serif; margin: 20px; }
                 @media print { body { margin: 0; } }
@@ -260,7 +260,7 @@ const AdminOrders = () => {
           
           <div class="branding-section" style="position: absolute; right: 40px; bottom: 40px; width: 320px; text-align: right;">
             <div class="logo-section" style="margin-bottom: 20px; text-align: right;">
-              <img src="/blacklogo.png" alt="Morpankh Saree Logo" style="width: 400px; height: auto; display: inline-block;" />
+              <img src="/blacklogo.png" alt="Anand Wholesale Logo" style="width: 400px; height: auto; display: inline-block;" />
             </div>
             <div class="shop-section" style="font-size: 30px; line-height: 1.35; color: #333; text-align: right;">
               <p style="margin: 0;">Add - Shop No 48/3, Baba Pathare Patil Complex,Chatrapati Shivaji Maharaj Chowk, Kharadi Road,</p>
@@ -277,7 +277,7 @@ const AdminOrders = () => {
         printWindow.document.write(`
           <html>
             <head>
-              <title>Delivery Order - ${orderData.orderNumber} | Morpankh Saree</title>
+              <title>Delivery Order - ${orderData.orderNumber} | Anand Wholesale</title>
               <style>
                 body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
                 @media print { body { margin: 0; } }
@@ -458,7 +458,7 @@ const AdminOrders = () => {
         
         <div class="branding-section" style="position: absolute; right: 40px; bottom: 40px; width: 320px; text-align: right;">
           <div class="logo-section" style="margin-bottom: 20px; text-align: right;">
-            <img src="/blacklogo.png" alt="Morpankh Saree Logo" style="width: 400px; height: auto; display: inline-block;" />
+            <img src="/blacklogo.png" alt="Anand Wholesale Logo" style="width: 400px; height: auto; display: inline-block;" />
           </div>
           <div class="shop-section" style="font-size: 30px; line-height: 1.35; color: #333; text-align: right;">
             <p style="margin: 0;">Add - Shop No 48/3, Baba Pathare Patil Complex,Chatrapati Shivaji Maharaj Chowk, Kharadi Road,</p>
@@ -475,7 +475,7 @@ const AdminOrders = () => {
       printWindow.document.write(`
         <html>
           <head>
-            <title>Print Delivery Orders - Morpankh Saree</title>
+            <title>Print Delivery Orders - Anand Wholesale</title>
             <style>
               body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
               @media print { body { margin: 0; } }

@@ -223,7 +223,7 @@ const Checkout = () => {
           key: keyId,
           amount,
           currency,
-          name: 'Morpankh Saree',
+          name: 'Anand Wholesale',
           description: `${hasPrebookingItems ? 'Prebooking Order' : 'Order'} ${orderPayload.orderNumber}${expectedDeliveryDate ? ` - Delivery by ${expectedDeliveryDate}` : ''}`,
           order_id: orderId,
           prefill: {

@@ -206,7 +206,7 @@ const Login = () => {
               </div>
               <h2 className="font-display text-4xl xl:text-5xl font-bold leading-tight mb-4">
                 परंपरेचा<br />
-                <span className="text-white/80">मोरपंखी स्पर्श</span>
+                <span className="text-white/80">आनंद होलसेल</span>
               </h2>
               <p className="text-white/70 text-base leading-relaxed max-w-sm">
                 Discover handcrafted sarees that blend centuries of tradition with contemporary elegance.
@@ -247,7 +247,7 @@ const Login = () => {
             {/* Logo / title area */}
             <div className="mb-8 s1">
               <div className="flex items-center justify-center gap-2 mb-6">
-                <Image src="/favicon.png" alt="Morpankh Saree" width={250} height={200} />
+                <Image src="/favicon.png" alt="Anand Wholesale" width={250} height={200} />
               </div>
               <p className="text-muted-foreground text-sm">Sign in to your account to continue</p>
             </div>
@@ -306,7 +306,7 @@ const Login = () => {
 
             {/* Register link */}
             <p className="text-center text-sm text-muted-foreground s5">
-              New to Morpankh?{' '}
+              New to Anand Wholesale?{' '}
               <Link href="/register" className="font-semibold hover:underline underline-offset-4 transition-all"
                 style={{ color: 'hsl(var(--primary))' }}>
                 Create an account

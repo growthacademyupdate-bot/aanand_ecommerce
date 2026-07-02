@@ -181,9 +181,9 @@ const OrdersPage = () => {
         <div class="invoice">
           <div class="header">
             <div class="header-content">
-              <img src="/favicon.png" alt="Morpankh Saree Logo" class="logo" />
+              <img src="/favicon.png" alt="Anand Wholesale Logo" class="logo" />
               <div>
-                <h1>MORPANKH SAREE</h1>
+                <h1>ANAND WHOLESALE</h1>
                 <p>Tax Invoice</p>
                 <p>Order #${order.orderNumber}</p>
               </div>
@@ -235,8 +235,8 @@ const OrdersPage = () => {
           </div>
           
           <div class="footer">
-            <p>Thank you for shopping with Morpankh Saree!</p>
-            <p>For any queries, contact us at support@morpankh.com</p>
+            <p>Thank you for shopping with Anand Wholesale!</p>
+            <p>For any queries, contact us at support@anandwholesale.com</p>
             <p>Invoice Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
           </div>
         </div>
@@ -358,7 +358,7 @@ const OrdersPage = () => {
           {/* banner text */}
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
             <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-              Morpankh Saree · My Orders
+              Anand Wholesale · My Orders
             </p>
             <h2 className="text-4xl font-bold mb-2">My Orders</h2>
             <p className="text-white/70 text-sm max-w-md">

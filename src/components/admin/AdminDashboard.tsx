@@ -149,7 +149,7 @@ const AdminDashboard = () => {
 
       {/* Today */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-card rounded-xl p-6 border border-border gradient-hero text-primary-foreground">
+        <div className="bg-card rounded-xl p-6 border border-border gradient-saffron text-secondary-foreground">
           <p className="text-sm opacity-80">Today's Orders</p>
           <p className="text-3xl font-bold">{razorpayLoading ? '...' : todayOrdersCount}</p>
           <p className="mt-2 text-xs opacity-80">{razorpayLoading ? 'Fetching Razorpay captured payments...' : razorpayError ? `Razorpay error: ${razorpayError}` : 'Source: Razorpay captured payments'}</p>

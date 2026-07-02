@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronRight, Star, Plus, Send } from 'lucide-react';
 import PublicLayout from '@/components/PublicLayout';
@@ -116,6 +116,37 @@ const Index = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isReviewsPaused, setIsReviewsPaused] = useState(false);
+
+  const subcategoryScrollRef = useRef<HTMLDivElement>(null);
+  const [isSubcategoryHovered, setIsSubcategoryHovered] = useState(false);
+
+  // ─── Subcategory auto-slide ────────────────────────────────────────────────
+  useEffect(() => {
+    if (isSubcategoryHovered) return;
+    const interval = setInterval(() => {
+      if (subcategoryScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = subcategoryScrollRef.current;
+        if (scrollLeft + clientWidth >= scrollWidth - 10) {
+          subcategoryScrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          subcategoryScrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+        }
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [isSubcategoryHovered]);
+
+  const scrollSubcategoryNext = () => {
+    if (subcategoryScrollRef.current) {
+      subcategoryScrollRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
+
+  const scrollSubcategoryPrev = () => {
+    if (subcategoryScrollRef.current) {
+      subcategoryScrollRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
 
   // ─── Loading skeleton timer ────────────────────────────────────────────────
   useEffect(() => {
@@ -339,7 +370,7 @@ const Index = () => {
               <img
                 key={idx}
                 src={src}
-                alt={`Morpankh Banner ${idx + 1}`}
+                alt={`Anand Wholesale Banner ${idx + 1}`}
                 className="w-full h-auto object-contain flex-shrink-0"
               />
             ))}
@@ -470,17 +501,28 @@ const Index = () => {
                   ))}
                 </div>
 
-                {/* Subcategories Sliding Marquee */}
-                <div className="relative overflow-hidden w-full max-w-7xl mx-auto pt-4">
-                  <style>{`
-                    @keyframes subcategoriesMarqueeLTR {
-                      0% { transform: translateX(0%); }
-                      100% { transform: translateX(-50%); }
-                    }
-                    .categories-marquee:hover .categories-track {
-                      animation-play-state: paused;
-                    }
-                  `}</style>
+                {/* Subcategories Slider */}
+                <div 
+                  className="relative w-full max-w-7xl mx-auto pt-4 px-8 group"
+                  onMouseEnter={() => setIsSubcategoryHovered(true)}
+                  onMouseLeave={() => setIsSubcategoryHovered(false)}
+                >
+                  {/* Next/Prev Arrows */}
+                  <button
+                    onClick={scrollSubcategoryPrev}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background shadow-md text-foreground p-2 rounded-full transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 hover:scale-110 border border-border"
+                    aria-label="Previous subcategories"
+                  >
+                    <ChevronRight className="h-5 w-5 rotate-180" />
+                  </button>
+                  <button
+                    onClick={scrollSubcategoryNext}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background shadow-md text-foreground p-2 rounded-full transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 hover:scale-110 border border-border"
+                    aria-label="Next subcategories"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+
                   {(() => {
                     const activeSubcategories = selectedCategoryId === 'All' 
                       ? subcategories 
@@ -494,38 +536,35 @@ const Index = () => {
                       );
                     }
 
-                    // Duplicate for seamless loop if there are enough, else just show them
-                    const displayItems = activeSubcategories.length < 4 
-                      ? activeSubcategories 
-                      : [...activeSubcategories, ...activeSubcategories];
-
                     return (
-                      <div className="categories-marquee flex w-max gap-4 sm:gap-6 pb-6">
-                        <div
-                          className="categories-track flex w-max gap-4 sm:gap-6"
-                          style={{ 
-                            animation: activeSubcategories.length >= 4 ? 'subcategoriesMarqueeLTR 30s linear infinite' : 'none' 
-                          }}
-                        >
-                          {displayItems.map((sub, idx) => (
-                            <Link
-                              key={`${sub.id}-${idx}`}
-                              href={`/products?category=${sub.categorySlug}&subcategoryId=${sub.id}`}
-                              className="group/item flex-shrink-0 w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] relative aspect-square rounded-full overflow-hidden card-hover border border-border/30 shadow-sm"
-                            >
-                              <img
-                                src={sub.image || '/placeholder.svg'}
-                                alt={sub.name}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent flex items-end justify-center p-4">
-                                <span className="text-background font-display font-medium text-sm sm:text-base text-center leading-tight drop-shadow-md">
-                                  {sub.name}
-                                </span>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
+                      <div 
+                        ref={subcategoryScrollRef}
+                        className="subcategories-scroll flex w-full gap-4 sm:gap-6 pb-6 overflow-x-auto scroll-smooth snap-x snap-mandatory"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                      >
+                        <style>{`
+                          .subcategories-scroll::-webkit-scrollbar {
+                            display: none;
+                          }
+                        `}</style>
+                        {activeSubcategories.map((sub, idx) => (
+                          <Link
+                            key={`${sub.id}-${idx}`}
+                            href={`/products?category=${sub.categorySlug}&subcategoryId=${sub.id}`}
+                            className="snap-start group/item flex-shrink-0 w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] relative aspect-square rounded-full overflow-hidden card-hover border border-border/30 shadow-sm"
+                          >
+                            <img
+                              src={sub.image || '/placeholder.svg'}
+                              alt={sub.name}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent flex items-end justify-center p-4">
+                              <span className="text-background font-display font-medium text-sm sm:text-base text-center leading-tight drop-shadow-md">
+                                {sub.name}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
                       </div>
                     );
                   })()}
@@ -578,7 +617,7 @@ const Index = () => {
             bg="bg-background"
           />
           <ProductSection
-            title="Trending Sarees"
+            title="Trending products"
             subtitle="What's popular right now"
             items={trendingSarees}
             filterParam="trending"

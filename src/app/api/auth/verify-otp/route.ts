@@ -38,12 +38,12 @@ async function sendWelcomeEmail(email: string, name: string) {
     console.log('✓ SMTP connection verified successfully');
 
     const mailOptions = {
-      from: `"Morpankh Saree" <${process.env.EMAIL_HOST_USER}>`,
+      from: `"Anand Wholesale" <${process.env.EMAIL_HOST_USER}>`,
       to: email,
-      subject: 'Welcome to Morpankh Saree - Account Verified Successfully!',
+      subject: 'Welcome to Anand Wholesale - Account Verified Successfully!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="margin: 0 0 12px; color: #2563eb;">Welcome to Morpankh Saree, ${name}!</h2>
+          <h2 style="margin: 0 0 12px; color: #2563eb;">Welcome to Anand Wholesale, ${name}!</h2>
           <p style="margin: 0 0 16px;">Congratulations! Your email has been successfully verified and your account is now active.</p>
           
           <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
@@ -67,7 +67,7 @@ async function sendWelcomeEmail(email: string, name: string) {
           
           <p style="margin: 8px 0 0; color: #6b7280; font-size: 14px;">
             Happy Shopping!<br>
-            <strong>Morpankh Saree Team</strong>
+            <strong>Anand Wholesale Team</strong>
           </p>
         </div>
       `,

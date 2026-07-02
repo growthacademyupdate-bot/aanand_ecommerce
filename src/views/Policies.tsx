@@ -96,7 +96,7 @@ const AnimatedPolicyPage = ({
           <div className="text-center mb-14 fade-up-1">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs font-medium tracking-wide mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              Morpankh Saree
+              Anand Wholesale
             </div>
             <h1
               className="text-5xl font-bold mb-4"
@@ -217,7 +217,7 @@ export const PrivacyPolicy = () => (
         {/* banner text */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
           <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-            Morpankh Saree · Legal
+            Anand Wholesale · Legal
           </p>
           <h2 className="text-4xl font-bold mb-2">Your Privacy Matters</h2>
           <p className="text-white/70 text-sm max-w-md">
@@ -319,7 +319,7 @@ export const RefundPolicy = () => (
         </div>
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
           <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-            Morpankh Saree · Legal
+            Anand Wholesale · Legal
           </p>
           <h2 className="text-4xl font-bold mb-2">Refund & Exchange Policy</h2>
           <p className="text-white/70 text-sm max-w-md">
@@ -405,7 +405,7 @@ export const ShippingPolicy = () => (
         </div>
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
           <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-            Morpankh Saree · Legal
+            Anand Wholesale · Legal
           </p>
           <h2 className="text-4xl font-bold mb-2">Shipping & Delivery Policy</h2>
           <p className="text-white/70 text-sm max-w-md">
@@ -466,7 +466,7 @@ const TERMS = [
   { n: 6, title: 'Shipping & delivery', body: 'We deliver products across India. Delivery timelines may vary due to location, courier partners, and unforeseen circumstances.' },
   { n: 7, title: 'Return, refund & exchange', body: 'We follow a No Return, No Refund, No Exchange policy. Customers must contact us within 24 hours of delivery if there are any issues.' },
   { n: 8, title: 'User responsibilities', body: 'Customers must provide accurate and complete information. Fraudulent activities will result in order cancellation without prior notice.' },
-  { n: 9, title: 'Intellectual property', body: 'All content including images, designs, and text are the exclusive property of Morpankh Saree. Unauthorized use is strictly prohibited.' },
+  { n: 9, title: 'Intellectual property', body: 'All content including images, designs, and text are the exclusive property of Anand Wholesale. Unauthorized use is strictly prohibited.' },
   { n: 10, title: 'Limitation of liability', body: 'We are not responsible for delays caused by courier partners or circumstances beyond our control. Our maximum liability is limited to the product value.' },
   { n: 11, title: 'Governing law', body: 'These Terms are governed by the laws of India. Any disputes shall be subject to the jurisdiction of Indian courts.' },
   {
@@ -516,7 +516,7 @@ export const TermsAndConditions = () => (
         </div>
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
           <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-            Morpankh Saree · Legal
+            Anand Wholesale · Legal
           </p>
           <h2 className="text-4xl font-bold mb-2">Terms & Conditions</h2>
           <p className="text-white/70 text-sm max-w-md">
@@ -529,7 +529,7 @@ export const TermsAndConditions = () => (
     mainContent={
       <>
         <h2 className="text-2xl font-bold mb-3" style={{ color: 'hsl(var(--primary))' }}>
-          Welcome to Morpankh Saree
+          Welcome to Anand Wholesale
         </h2>
         <p className="text-base text-muted-foreground leading-relaxed">
           By accessing and using our website, you agree to be bound by these
@@ -545,7 +545,7 @@ export const TermsAndConditions = () => (
         {t.contact ? (
           <>
             <p>For queries or support, contact us at:</p>
-            <p className="mt-2">📧 morpankhsaree@gmail.com</p>
+            <p className="mt-2">📧 anandwholesale@gmail.com</p>
             <p>📞 917704862</p>
           </>
         ) : (

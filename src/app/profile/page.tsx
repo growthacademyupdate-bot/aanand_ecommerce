@@ -284,7 +284,7 @@ const ProfilePage = () => {
           {/* banner text */}
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
             <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-              Morpankh Saree · My Profile
+              Anand Wholesale · My Profile
             </p>
             <h2 className="text-4xl font-bold mb-2">My Profile</h2>
             <p className="text-white/70 text-sm max-w-md">

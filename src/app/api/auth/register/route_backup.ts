@@ -30,10 +30,10 @@ async function sendOTP(email: string, otp: string) {
   const mailOptions = {
     from: process.env.EMAIL_HOST_USER,
     to: email,
-    subject: 'OTP for Account Verification - Morpankh Saree',
+    subject: 'OTP for Account Verification - Anand Wholesale',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #333;">Welcome to Morpankh Saree!</h2>
+        <h2 style="color: #333;">Welcome to Anand Wholesale!</h2>
         <p>Your OTP for account verification is:</p>
         <div style="background-color: #f4f4f4; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px;">
           ${otp}

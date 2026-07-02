@@ -46,13 +46,13 @@ async function sendOTP(email: string, otp: string) {
     console.log('✓ SMTP connection verified successfully');
 
     const mailOptions = {
-      from: `"Morpankh Saree" <${process.env.EMAIL_HOST_USER}>`,
+      from: `"Anand Wholesale" <${process.env.EMAIL_HOST_USER}>`,
       to: email,
-      subject: 'OTP for Account Verification - Morpankh Saree',
+      subject: 'OTP for Account Verification - Anand Wholesale',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
-            <h2 style="margin: 0;">Welcome to Morpankh Saree!</h2>
+            <h2 style="margin: 0;">Welcome to Anand Wholesale!</h2>
           </div>
           <div style="padding: 20px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; margin-top: 20px;">
             <p style="color: #333; font-size: 16px;">Your OTP for account verification is:</p>
@@ -63,7 +63,7 @@ async function sendOTP(email: string, otp: string) {
             <p style="color: #999; font-size: 12px;">If you didn't request this, please ignore this email.</p>
           </div>
           <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #999; font-size: 12px;">
-            <p>© 2026 Morpankh Saree. All rights reserved.</p>
+            <p>© 2026 Anand Wholesale. All rights reserved.</p>
           </div>
         </div>
       `,

@@ -38,9 +38,9 @@ async function sendAdminOtpEmail(toEmail: string, otp: string) {
   const transporter = getEmailTransporter();
 
   await transporter.sendMail({
-    from: `"Morpankh Saree" <${process.env.EMAIL_HOST_USER}>`,
+    from: `"Anand Wholesale" <${process.env.EMAIL_HOST_USER}>`,
     to: toEmail,
-    subject: 'Admin Login OTP - Morpankh Saree',
+    subject: 'Admin Login OTP - Anand Wholesale',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="margin: 0 0 12px;">Admin Login Verification</h2>
