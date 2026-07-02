@@ -6,6 +6,8 @@ export interface MappedProduct {
   slug: string;
   price: number;
   comparePrice: number;
+  wholesalePrice?: number;
+  moq?: number;
   description: string;
   fabric: string;
   size: string;
@@ -149,6 +151,8 @@ export function mapProductFromDoc(p: WithId<Document>): MappedProduct {
     slug: String(p.slug || getSlug(String(p.name || ''))),
     price,
     comparePrice,
+    wholesalePrice: p.wholesalePrice ? toNumber(p.wholesalePrice) : undefined,
+    moq: p.moq ? toNumber(p.moq) : undefined,
     description: String(p.description || ''),
     fabric: String(p.fabricType ?? p.fabric ?? ''),
     size: String(p.size || ''),
@@ -196,7 +200,7 @@ export function buildProductQuery(params: {
 }): Record<string, unknown> {
   const filter: Record<string, unknown> = { hidden: { $ne: true } };
 
-  if (params.category) {
+  if (params.category && params.category.toLowerCase() !== 'all') {
     filter.category = { $regex: `^${params.category}$`, $options: 'i' };
   }
 

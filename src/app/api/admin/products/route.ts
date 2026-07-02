@@ -346,6 +346,8 @@ export async function POST(request: NextRequest) {
       comparePrice,
       basePrice: price,
       compareAtPrice: comparePrice,
+      wholesalePrice: Number(body?.wholesalePrice) || undefined,
+      moq: Number(body?.moq) || undefined,
 
       stock: Number(body?.stock) || 0,
       colors,

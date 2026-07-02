@@ -28,6 +28,8 @@ function mapDetailResponse(data: Record<string, unknown>): Product {
     slug: String(data.slug ?? ''),
     price,
     comparePrice,
+    wholesalePrice: data.wholesalePrice ? Number(data.wholesalePrice) : undefined,
+    moq: data.moq ? Number(data.moq) : undefined,
     description: String(data.description ?? ''),
     fabric: String(data.fabricType ?? ''),
     images: images.length ? images : ['/placeholder.svg'],
@@ -64,7 +66,7 @@ const ProductDetail = () => {
 
   const router = useRouter();
 
-  const { addToCart, toggleWishlist, wishlist } = useStore();
+  const { addToCart, toggleWishlist, wishlist, wholesaleEnabled } = useStore();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -534,7 +536,7 @@ const ProductDetail = () => {
 
     
 
-    addToCart({ productId: product.id, name: product.name, image: variantImage, price: product.price, color: selectedColor, size: selectedSize, quantity });
+    addToCart({ productId: product.id, name: product.name, image: variantImage, price: product.price, wholesalePrice: product.wholesalePrice, moq: product.moq, color: selectedColor, size: selectedSize, quantity });
 
     toast({ title: 'Added to cart!', description: `${product.name} (${selectedColor})` });
 
@@ -599,6 +601,8 @@ const ProductDetail = () => {
       price: product.price,
 
       comparePrice: product.comparePrice,
+      wholesalePrice: product.wholesalePrice,
+      moq: product.moq,
 
       color: selectedColor,
 
@@ -626,9 +630,11 @@ const ProductDetail = () => {
 
     <PublicLayout>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+        <div className="bg-card border border-border/60 shadow-xl shadow-primary/5 rounded-[24px] p-6 md:p-8 lg:p-12 mb-16">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
 
           {/* Images */}
 
@@ -723,6 +729,16 @@ const ProductDetail = () => {
               )}
 
             </div>
+
+            {wholesaleEnabled && product.wholesalePrice && product.moq && (
+              <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p className="text-amber-800 font-medium flex items-center gap-2">
+                  <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded">B2B</span>
+                  Wholesale Price: ₹{product.wholesalePrice.toLocaleString()} 
+                  <span className="text-sm font-normal text-amber-700">(Min. qty: {product.moq})</span>
+                </p>
+              </div>
+            )}
 
 
 
@@ -1038,6 +1054,7 @@ const ProductDetail = () => {
 
           </div>
 
+          </div>
         </div>
 
 

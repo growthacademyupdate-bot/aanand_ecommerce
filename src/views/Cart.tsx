@@ -7,8 +7,15 @@ import PrebookingBadge from '@/components/PrebookingBadge';
 import { toast } from '@/hooks/use-toast';
 
 const Cart = () => {
-  const { cart, updateCartQuantity, removeFromCart, products } = useStore();
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const { cart, updateCartQuantity, removeFromCart, products, wholesaleEnabled } = useStore();
+  
+  const subtotal = cart.reduce((sum, item) => {
+    let itemPrice = item.price;
+    if (wholesaleEnabled && item.wholesalePrice && item.moq && item.quantity >= item.moq) {
+      itemPrice = item.wholesalePrice;
+    }
+    return sum + itemPrice * item.quantity;
+  }, 0);
 
   // Get stock for selected color variant
   const getVariantStock = (productId: string, color: string, size?: string) => {
@@ -314,8 +321,17 @@ const Cart = () => {
                       </p>
                       <div className="mb-4">
                         <p className="font-bold text-xl" style={{ color: 'hsl(var(--primary))' }}>
-                          Rs{item.price.toLocaleString()}
+                          ₹{(wholesaleEnabled && item.wholesalePrice && item.moq && item.quantity >= item.moq) ? item.wholesalePrice.toLocaleString() : item.price.toLocaleString()}
                         </p>
+                        {wholesaleEnabled && item.wholesalePrice && item.moq && (
+                          <div className="mt-1">
+                            <span className={`text-sm font-medium ${item.quantity >= item.moq ? 'text-green-600' : 'text-amber-600'}`}>
+                              {item.quantity >= item.moq 
+                                ? `Wholesale applied (MOQ: ${item.moq})`
+                                : `Add ${item.moq - item.quantity} more for Wholesale Price (₹${item.wholesalePrice})`}
+                            </span>
+                          </div>
+                        )}
                         {item.isPrebooking && (
                           <div className="mt-1 space-y-1">
                             <div className="flex items-center gap-1 text-xs font-medium text-purple-600">

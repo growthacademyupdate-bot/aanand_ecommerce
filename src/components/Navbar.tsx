@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ShoppingCart, Heart, User, Menu, X, LogOut, Search } from 'lucide-react';
+import { ShoppingCart, Heart, User, Menu, X, LogOut, Search, ChevronDown, Package } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import logo from '@/assets/logo.png';
 import Image from 'next/image';
@@ -28,11 +28,34 @@ const Navbar = () => {
   const wishlist = useStore((s) => s.wishlist);
   const isLoggedIn = useStore((s) => s.isLoggedIn);
   const isAdmin = useStore((s) => s.isAdmin);
+  const wholesaleEnabled = useStore((s) => s.wholesaleEnabled);
   const userName = useStore((s) => s.userName);
   const logout = useStore((s) => s.logout);
   const cartCount = cart.length;
   const [userMenu, setUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const storeCategories = useStore((s) => s.categories);
+  const [categories, setCategories] = useState<{ id?: string; name: string; slug?: string }[]>([]);
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+  const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories');
+        const result = await response.json();
+        if (response.ok && result?.success && Array.isArray(result.data)) {
+          setCategories(result.data);
+          return;
+        }
+      } catch {
+        // ignore
+      }
+      setCategories(Array.isArray(storeCategories) ? storeCategories as any[] : []);
+    };
+    fetchCategories();
+  }, [storeCategories]);
 
   // Handle Escape key to close sidebar and body scroll lock
   useEffect(() => {
@@ -125,6 +148,14 @@ const Navbar = () => {
                   </div>
                   <span className="text-[10px] font-medium hidden md:block">Wishlist</span>
                 </Link>
+                {wholesaleEnabled && (
+                  <Link href="/quick-order" className="relative group p-2 flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
+                    <div className="relative">
+                      <Package className="h-6 w-6 transition-transform group-hover:scale-110" strokeWidth={1.5} />
+                    </div>
+                    <span className="text-[10px] font-medium hidden md:block">B2B Order</span>
+                  </Link>
+                )}
                 <Link href="/cart" className="relative group p-2 flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
                   <div className="relative">
                     <ShoppingCart className="h-6 w-6 transition-transform group-hover:scale-110" strokeWidth={1.5} />
@@ -190,14 +221,71 @@ const Navbar = () => {
             </div>
 
             {/* Navigation Links Row (Desktop) */}
-            <div className="hidden md:flex items-center justify-center h-12 gap-6">
+            <div className="hidden md:flex items-center justify-center pb-3 pt-1 gap-6">
               {navLinks.map((link) => {
                 const active = isActive(link.to);
+                
+                if (link.label === 'Category') {
+                  return (
+                    <div 
+                      key={link.to} 
+                      className="relative group"
+                      onMouseEnter={() => setCategoryDropdownOpen(true)}
+                      onMouseLeave={() => setCategoryDropdownOpen(false)}
+                    >
+                      <Link 
+                        href={link.to} 
+                        className={`relative px-5 py-1.5 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-1.5 ${
+                          active 
+                            ? 'bg-primary text-primary-foreground shadow-md' 
+                            : 'text-foreground hover:text-primary hover:bg-muted/50'
+                        }`}
+                      >
+                        {link.label}
+                        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${categoryDropdownOpen ? 'rotate-180' : ''}`} />
+                      </Link>
+                      <AnimatePresence>
+                        {categoryDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute left-1/2 -translate-x-1/2 top-full pt-1 w-56 z-50"
+                          >
+                            <div className="bg-card border border-border rounded-[18px] shadow-xl overflow-hidden py-2 flex flex-col">
+                              <Link 
+                                href="/products?category=all" 
+                                className="px-5 py-2.5 text-sm text-foreground hover:bg-primary/10 hover:text-primary transition-colors font-medium border-b border-border/50"
+                                onClick={() => setCategoryDropdownOpen(false)}
+                              >
+                                All Categories
+                              </Link>
+                              <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
+                                {categories.map((cat, idx) => (
+                                  <Link 
+                                    key={cat.id || cat.slug || idx}
+                                    href={`/products?category=${encodeURIComponent(cat.slug || cat.name)}`}
+                                    className="block px-5 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
+                                    onClick={() => setCategoryDropdownOpen(false)}
+                                  >
+                                    {cat.name}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
                 return (
                   <Link 
                     key={link.to} 
                     href={link.to} 
-                    className={`relative px-5 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
+                    className={`relative px-5 py-1.5 text-sm font-medium transition-all duration-300 rounded-full ${
                       active 
                         ? 'bg-primary text-primary-foreground shadow-md' 
                         : 'text-foreground hover:text-primary hover:bg-muted/50'
@@ -257,20 +345,81 @@ const Navbar = () => {
               </div>
 
               <div className="flex flex-col p-4 gap-1">
-                {navLinks.map((link) => (
+                {navLinks.map((link) => {
+                  if (link.label === 'Category') {
+                    return (
+                      <div key={link.to} className="flex flex-col">
+                        <button
+                          onClick={() => setMobileCategoryOpen(!mobileCategoryOpen)}
+                          className={`w-full flex items-center justify-between py-3 px-4 rounded-xl transition-all duration-300 font-medium ${
+                            isActive(link.to)
+                              ? 'bg-primary/10 text-primary'
+                              : 'text-foreground hover:bg-muted'
+                          }`}
+                        >
+                          <span>{link.label}</span>
+                          <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${mobileCategoryOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        <AnimatePresence>
+                          {mobileCategoryOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="overflow-hidden flex flex-col pl-4 gap-1 mt-1"
+                            >
+                              <Link
+                                href="/products?category=all"
+                                onClick={() => setMobileOpen(false)}
+                                className="py-2 px-4 rounded-xl transition-all duration-300 text-sm font-medium text-foreground hover:bg-muted"
+                              >
+                                All Categories
+                              </Link>
+                              {categories.map((cat, idx) => (
+                                <Link
+                                  key={cat.id || cat.slug || idx}
+                                  href={`/products?category=${encodeURIComponent(cat.slug || cat.name)}`}
+                                  onClick={() => setMobileOpen(false)}
+                                  className="py-2 px-4 rounded-xl transition-all duration-300 text-sm text-muted-foreground hover:text-primary hover:bg-muted"
+                                >
+                                  {cat.name}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <Link
+                      key={link.to}
+                      href={link.to}
+                      onClick={() => setMobileOpen(false)}
+                      className={`py-3 px-4 rounded-xl transition-all duration-300 font-medium ${
+                        isActive(link.to)
+                          ? 'bg-primary/10 text-primary'
+                          : 'text-foreground hover:bg-muted'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
+                {wholesaleEnabled && (
                   <Link
-                    key={link.to}
-                    href={link.to}
+                    href="/quick-order"
                     onClick={() => setMobileOpen(false)}
                     className={`py-3 px-4 rounded-xl transition-all duration-300 font-medium ${
-                      isActive(link.to)
+                      isActive('/quick-order')
                         ? 'bg-primary/10 text-primary'
                         : 'text-foreground hover:bg-muted'
                     }`}
                   >
-                    {link.label}
+                    B2B Quick Order
                   </Link>
-                ))}
+                )}
               </div>
             </motion.div>
           </>

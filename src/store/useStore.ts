@@ -9,6 +9,8 @@ export interface CartItem {
   image: string;
   price: number;
   comparePrice?: number;
+  wholesalePrice?: number;
+  moq?: number;
   color: string;
   size?: string;
   quantity: number;
@@ -41,6 +43,9 @@ interface StoreState {
     pincode?: string;
   } | null;
   token: string | null;
+  
+  wholesaleEnabled: boolean;
+  fetchWholesaleSettings: () => Promise<void>;
 
   loadProducts: (page?: number, limit?: number) => Promise<void>;
 
@@ -101,6 +106,19 @@ export const useStore = create<StoreState>()(
       userName: '',
       user: null,
       token: null,
+      wholesaleEnabled: false,
+
+      fetchWholesaleSettings: async () => {
+        try {
+          const res = await fetch('/api/settings');
+          const data = await res.json();
+          if (data.success) {
+            set({ wholesaleEnabled: data.data.wholesaleEnabled });
+          }
+        } catch (error) {
+          console.error('Failed to fetch wholesale settings:', error);
+        }
+      },
 
       loadProducts: async (page = 1, limit = 12) => {
         try {

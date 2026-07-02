@@ -4,6 +4,8 @@ export interface Product {
   slug: string;
   price: number;
   comparePrice: number;
+  wholesalePrice?: number;
+  moq?: number;
   description: string;
   fabric: string;
   images: string[];

@@ -8,6 +8,8 @@ export interface ProductVariant {
   price?: number;
   stock?: number;
   image?: string;
+  wholesalePrice?: number;
+  moq?: number;
 }
 
 export interface ProductLabels {
@@ -40,6 +42,9 @@ export interface AdminProduct {
   discountType?: 'percentage' | 'fixed';
   discountValue?: number;
   taxPercent?: number;
+
+  wholesalePrice?: number;
+  moq?: number;
 
   stock: number;
   lowStockAlert?: number;

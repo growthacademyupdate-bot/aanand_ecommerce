@@ -1,4 +1,4 @@
-import { Heart, ShoppingBag, Eye, Star } from 'lucide-react';
+import { Heart, ShoppingCart, Eye, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -105,7 +105,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   return (
-    <Link href={`/product/${product.id}`} className="group block h-full">
+    <Link href={`/product/${product.slug}`} className="group block h-full">
       <div ref={containerRef} className="bg-card rounded-[18px] h-full flex flex-col overflow-hidden border border-border transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1">
         <div className="relative aspect-[3/4] overflow-hidden bg-muted">
           {!imgLoaded && (
@@ -151,13 +151,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </span>
               )}
             </div>
-            
-            <button 
-              onClick={handleToggleWishlist} 
-              className="p-2 bg-card/80 backdrop-blur-md rounded-full text-muted-foreground hover:text-secondary hover:bg-card shadow-sm transition-all z-20"
-            >
-              <Heart className={`h-4 w-4 ${isWished ? 'fill-secondary text-secondary' : ''}`} />
-            </button>
           </div>
 
           {product.isNew && (
@@ -166,13 +159,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </span>
           )}
 
-          {/* Hover overlay for cart */}
-          <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/50 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-center gap-3 z-10">
+          {/* Hover overlay for cart and wishlist */}
+          <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 bg-black/10 backdrop-blur-[2px]">
             <button 
               onClick={handleAddToCart} 
-              className="w-full bg-card text-foreground py-2.5 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors shadow-lg"
+              className="bg-white text-foreground p-3.5 rounded-full hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-xl translate-y-4 group-hover:translate-y-0"
+              aria-label="Add to cart"
             >
-              <ShoppingBag className="h-4 w-4" /> Add to Cart
+              <ShoppingCart className="h-5 w-5" />
+            </button>
+            <button 
+              onClick={handleToggleWishlist} 
+              className="bg-white text-foreground p-3.5 rounded-full hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-xl translate-y-4 group-hover:translate-y-0 delay-75"
+              aria-label="Add to wishlist"
+            >
+              <Heart className={`h-5 w-5 ${isWished ? 'fill-primary text-primary' : ''}`} />
             </button>
           </div>
         </div>

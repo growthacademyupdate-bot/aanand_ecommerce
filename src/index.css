@@ -6,52 +6,52 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%; /* #FAFAFA */
-    --foreground: 167 81% 16%; /* #084C3D */
+    --background: 30 40% 98%;          /* warm off-white, not stark white */
+    --foreground: 15 35% 15%;          /* warm near-black for text */
 
-    --card: 0 0% 100%; /* #FFFFFF */
-    --card-foreground: 167 81% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 15 35% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 167 81% 16%;
+    --popover-foreground: 15 35% 15%;
 
-    --primary: 10 82% 51%; /* #E33A24 Orange/Red matching logo */
+    --primary: 8 78% 52%;              /* logo red-orange */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 332 76% 39%; /* #B0185E */
+    --secondary: 28 85% 55%;           /* logo's warmer orange (gradient partner) */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 30 100% 98%; /* #FFF9F3 Cream */
-    --muted-foreground: 167 81% 40%; /* Lighter green text */
+    --muted: 30 60% 96%;               /* soft cream */
+    --muted-foreground: 20 15% 45%;
 
-    --accent: 41 55% 51%; /* #C89B3C Gold */
+    --accent: 41 70% 52%;              /* gold accent for highlights/badges */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 10 82% 51%;
+    --success: 142 60% 40%;
+    --warning: 38 90% 50%;
 
-    --radius: 1.125rem; /* 18px */
+    --border: 20 30% 90%;
+    --input: 20 30% 90%;
+    --ring: 8 78% 52%;
 
-    --sidebar-background: 167 81% 16%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 10 82% 51%;
+    --radius: 1rem;
+
+    --sidebar-background: 12 45% 14%;
+    --sidebar-foreground: 30 40% 96%;
+    --sidebar-primary: 8 78% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 167 81% 20%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 167 81% 20%;
-    --sidebar-ring: 10 82% 51%;
+    --sidebar-accent: 12 45% 20%;
+    --sidebar-accent-foreground: 30 40% 96%;
+    --sidebar-border: 12 45% 22%;
+    --sidebar-ring: 8 78% 52%;
 
-    --dark-green: 167 81% 16%;
-    --cream: 30 100% 98%;
-    --gold: 41 55% 51%;
-
-    --gradient-hero: linear-gradient(135deg, hsl(30 100% 98%), hsl(0 0% 100%));
-    --gradient-saffron: linear-gradient(135deg, hsl(332 76% 39%), hsl(41 55% 51%));
-    --gradient-peacock: linear-gradient(135deg, hsl(162 75% 24%), hsl(167 81% 16%));
+    --gradient-hero: linear-gradient(135deg, hsl(30 60% 97%), hsl(0 0% 100%));
+    --gradient-saffron: linear-gradient(135deg, hsl(8 78% 52%), hsl(28 85% 55%));
+    --gradient-peacock: linear-gradient(135deg, hsl(12 45% 20%), hsl(12 45% 12%));
+    --gradient-logo: linear-gradient(135deg, hsl(28 85% 58%), hsl(8 78% 50%));
 
     --font-display: 'Playfair Display', serif;
     --font-body: 'Poppins', sans-serif;

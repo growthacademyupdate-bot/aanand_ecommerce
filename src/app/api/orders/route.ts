@@ -438,8 +438,9 @@ export async function POST(request: NextRequest) {
   const itemsRaw = Array.isArray(b.items) ? b.items : [];
   const items = itemsRaw.map(normalizeOrderItem).filter(Boolean) as OrderItem[];
 
-  const subtotal = Number(b.subtotal);
-  const total = Number(b.total);
+  // Note: We will calculate subtotal and total dynamically below based on DB prices
+  let subtotal = Number(b.subtotal);
+  let total = Number(b.total);
 
   const paymentStatus = String(b.paymentStatus ?? 'paid') as OrderDoc['paymentStatus'];
   const orderStatus = String(b.orderStatus ?? 'confirmed') as OrderDoc['orderStatus'];
@@ -475,6 +476,30 @@ export async function POST(request: NextRequest) {
       const nextNumber = lastNumber + 1;
       orderNumber = `ORD-${nextNumber.toString().padStart(5, '0')}`;
     }
+
+    // Fetch wholesale settings
+    const settingsDoc = await db.collection('settings').findOne({ _id: 'global_settings' });
+    const wholesaleEnabled = settingsDoc?.wholesaleEnabled || false;
+
+    // Recalculate prices from DB to prevent tampering
+    let calculatedSubtotal = 0;
+    for (const item of items) {
+      const product = await db.collection('products').findOne({ _id: new ObjectId(item.productId) });
+      if (!product) {
+        return NextResponse.json({ error: `Product ${item.productId} not found` }, { status: 400 });
+      }
+
+      let appliedPrice = product.price;
+      if (wholesaleEnabled && product.wholesalePrice && product.moq && item.quantity >= product.moq) {
+        appliedPrice = product.wholesalePrice;
+      }
+      
+      item.price = appliedPrice; // Save the correctly applied price
+      calculatedSubtotal += appliedPrice * item.quantity;
+    }
+
+    subtotal = calculatedSubtotal;
+    total = calculatedSubtotal;
 
     const now = new Date();
     const doc: OrderDoc = {

@@ -99,7 +99,7 @@ export default function Page() {
           </div>
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-6 text-center">
             <p className="text-white/60 text-xs font-medium tracking-widest uppercase mb-3">
-              Morpankh Saree · Our Story
+              Anand Wholesale · Our Story
             </p>
             <h2 className="text-4xl font-bold mb-2">About Us</h2>
             <p className="text-white/70 text-sm max-w-md">
@@ -112,7 +112,7 @@ export default function Page() {
           <div className="text-center mb-14 fade-up-1">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs font-medium tracking-wide mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              Morpankh Saree
+              Anand Wholesale
             </div>
             <h1 className="text-5xl font-bold mb-4" style={{ color: 'hsl(var(--primary))' }} />
           </div>
@@ -120,7 +120,7 @@ export default function Page() {
           <div className="max-w-6xl mx-auto mb-12 fade-up-2">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
               <div
-                className="rounded-2xl p-10 border border-border/60 shadow-xl backdrop-blur-xl h-full"
+                className="rounded-2xl p-10 border border-border/60 shadow-xl backdrop-blur-xl h-full flex flex-col justify-center"
                 style={{ background: 'hsl(var(--card)/0.85)' }}
               >
                 <div className="text-center">
@@ -136,7 +136,7 @@ export default function Page() {
                       className="w-24 h-24 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-inner logo-pulse"
                       style={{ background: 'hsl(var(--primary)/0.08)' }}
                     >
-                      <Image src={logo} alt="Morpankh Logo" height={72} width={72} className="rounded-xl" />
+                      <Image src={logo} alt="Anand Wholesale Logo" height={72} width={72} className="rounded-xl" />
                     </div>
                   </div>
                   <div className="space-y-4">
@@ -144,7 +144,7 @@ export default function Page() {
                       Our Mission
                     </h2>
                     <p className="text-base text-muted-foreground leading-relaxed">
-                      Morpankh Saree is more than just a brand — it is a tribute to India's rich textile heritage.
+                      Anand Wholesale is more than just a brand — it is a tribute to India's rich textile heritage.
                       From Banarasi silks to Paithani masterpieces, every saree represents generations of artistry.
                     </p>
                     <div
@@ -174,15 +174,15 @@ export default function Page() {
               </div>
 
               <div
-                className="rounded-2xl border border-border/60 shadow-xl backdrop-blur-xl overflow-hidden h-full"
+                className="rounded-2xl border border-border/60 shadow-xl backdrop-blur-xl overflow-hidden h-full min-h-[400px] md:min-h-0 relative"
                 style={{ background: 'hsl(var(--card)/0.85)' }}
               >
-                <div className="relative w-full h-full min-h-[420px]">
+                <div className="absolute inset-0 w-full h-full">
                   <Image
-                    src="/model1.jpeg"
-                    alt="Model"
+                    src="/about_page_image_1.png"
+                    alt="Anand Wholesale"
                     fill
-                    className="object-cover object-top"
+                    className="object-cover object-center"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     priority
                   />

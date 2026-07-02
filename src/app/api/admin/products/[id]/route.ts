@@ -134,6 +134,9 @@ export async function PUT(
       update.compareAtPrice = cp;
     }
 
+    if (body?.wholesalePrice !== undefined) update.wholesalePrice = Number(body.wholesalePrice) || undefined;
+    if (body?.moq !== undefined) update.moq = Number(body.moq) || undefined;
+
     if (body?.stock !== undefined) update.stock = Number(body.stock) || 0;
 
     if (body?.colors !== undefined) {

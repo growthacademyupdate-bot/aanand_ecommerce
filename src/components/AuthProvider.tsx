@@ -9,10 +9,12 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const initializeAuth = useStore((state) => state.initializeAuth);
+  const fetchWholesaleSettings = useStore((state) => state.fetchWholesaleSettings);
 
   useEffect(() => {
     initializeAuth();
-  }, [initializeAuth]);
+    fetchWholesaleSettings();
+  }, [initializeAuth, fetchWholesaleSettings]);
 
   return <>{children}</>;
 };

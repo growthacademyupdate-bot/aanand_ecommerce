@@ -3,8 +3,8 @@ import "./globals.css";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
-  title: "Morpankh Saree - Traditional & Contemporary Sarees",
-  description: "Shop the finest collection of traditional and contemporary sarees. Banarasi, Paithani, Kanjivaram & more at Morpankh Saree.",
+  title: "Aanand Shop - Traditional & Contemporary Sarees",
+  description: "Shop the finest collection of traditional and contemporary sarees. Banarasi, Paithani, Kanjivaram & more at Aanand Shop.",
   icons: {
     icon: "/favicon1.png",
   },

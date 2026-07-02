@@ -42,6 +42,8 @@ interface DbProduct {
   fabric: string;
   size?: string;
   hasSizes?: boolean;
+  wholesalePrice?: number;
+  moq?: number;
   sizes?: string[];
   sizeQuantities?: { [key: string]: number };
   hidden?: boolean;
@@ -95,6 +97,8 @@ type ProductForm = {
   categoryId: string;
   subcategoryId: string;
   stock: string;
+  wholesalePrice?: string;
+  moq?: string;
 
   colors: {
     colorName: string;

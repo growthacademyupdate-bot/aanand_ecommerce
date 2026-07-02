@@ -63,6 +63,8 @@ export default function VariantProductModal({
     barcode: "",
     originalPrice: "",
     sellingPrice: "",
+    wholesalePrice: "",
+    moq: "",
     description: "",
     fabric: "",
     sareeLength: "",
@@ -114,6 +116,8 @@ export default function VariantProductModal({
         barcode: initialData.barcode || "",
         originalPrice: initialData.comparePrice?.toString() || "",
         sellingPrice: (initialData.price ?? initialData.basePrice ?? "").toString(),
+        wholesalePrice: initialData.wholesalePrice?.toString() || "",
+        moq: initialData.moq?.toString() || "",
         description: initialData.description || "",
         fabric: initialData.fabric || "",
         sareeLength: initialData.sareeLength || "",
@@ -171,6 +175,8 @@ export default function VariantProductModal({
         barcode: "",
         originalPrice: "",
         sellingPrice: "",
+        wholesalePrice: "",
+        moq: "",
         description: "",
         fabric: "",
         sareeLength: "",
@@ -333,7 +339,9 @@ export default function VariantProductModal({
         productType: "variant",
         category: cat?.slug || "",
         price: Number(form.sellingPrice),
-        comparePrice: Number(form.originalPrice) || Number(form.sellingPrice),
+        comparePrice: Number(form.originalPrice) || undefined,
+        wholesalePrice: Number(form.wholesalePrice) || undefined,
+        moq: Number(form.moq) || undefined,
         stock: totalStock,
         colors: formattedColors,
         hasSizes: colors.some(c => c.hasSizes),
@@ -434,6 +442,28 @@ export default function VariantProductModal({
                   onChange={(e) => setForm({ ...form, sellingPrice: e.target.value })}
                   placeholder="e.g. 1999"
                   className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1 text-primary">Wholesale Price (₹)</label>
+                <input
+                  type="number"
+                  value={form.wholesalePrice}
+                  onChange={(e) => setForm({ ...form, wholesalePrice: e.target.value })}
+                  className="w-full border border-primary/30 rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Optional"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-primary">MOQ (Min Qty)</label>
+                <input
+                  type="number"
+                  value={form.moq}
+                  onChange={(e) => setForm({ ...form, moq: e.target.value })}
+                  className="w-full border border-primary/30 rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Optional"
+                  min="1"
                 />
               </div>
 

@@ -46,6 +46,8 @@ export default function SimpleProductModal({
     barcode: "",
     originalPrice: "",
     sellingPrice: "",
+    wholesalePrice: "",
+    moq: "",
     discount: "",
     stock: "",
     image: "",
@@ -82,6 +84,8 @@ export default function SimpleProductModal({
         barcode: initialData.barcode || "",
         originalPrice: initialData.comparePrice?.toString() || "",
         sellingPrice: (initialData.price ?? initialData.basePrice ?? "").toString(),
+        wholesalePrice: initialData.wholesalePrice?.toString() || "",
+        moq: initialData.moq?.toString() || "",
         discount: "",
         stock: initialData.stock?.toString() || "",
         image: initialData.images?.[0] || "",
@@ -116,6 +120,8 @@ export default function SimpleProductModal({
         barcode: "",
         originalPrice: "",
         sellingPrice: "",
+        wholesalePrice: "",
+        moq: "",
         discount: "",
         stock: "",
         image: "",
@@ -180,7 +186,9 @@ export default function SimpleProductModal({
         productType: "simple",
         category: cat?.slug || "",
         price: Number(form.sellingPrice),
-        comparePrice: Number(form.originalPrice) || Number(form.sellingPrice),
+        comparePrice: Number(form.originalPrice) || undefined,
+        wholesalePrice: Number(form.wholesalePrice) || undefined,
+        moq: Number(form.moq) || undefined,
         stock: Number(form.stock) || 0,
         images: form.image ? [form.image] : [],
         // Convert local status to existing hidden flag
@@ -343,6 +351,28 @@ export default function SimpleProductModal({
                 value={form.sellingPrice}
                 onChange={(e) => setForm({ ...form, sellingPrice: e.target.value })}
                 className="w-full border border-border rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1 text-primary">Wholesale Price</label>
+              <input
+                type="number"
+                value={form.wholesalePrice}
+                onChange={(e) => setForm({ ...form, wholesalePrice: e.target.value })}
+                className="w-full border border-primary/30 rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Optional"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 text-primary">MOQ (Min Qty)</label>
+              <input
+                type="number"
+                value={form.moq}
+                onChange={(e) => setForm({ ...form, moq: e.target.value })}
+                className="w-full border border-primary/30 rounded-lg px-3 py-2 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Optional"
+                min="1"
               />
             </div>
           </div>

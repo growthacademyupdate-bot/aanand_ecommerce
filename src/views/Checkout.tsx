@@ -46,7 +46,7 @@ const loadRazorpayScript = (): Promise<boolean> =>
 
 const Checkout = () => {
   const router = useRouter();
-  const { cart, clearCart, user, token } = useStore();
+  const { cart, clearCart, user, token, wholesaleEnabled } = useStore();
   
   // Check for Buy Now item in sessionStorage
   const [buyNowItem, setBuyNowItem] = useState<{
@@ -95,7 +95,14 @@ const Checkout = () => {
     alternatePhone: '',
   });
   const [processing, setProcessing] = useState(false);
-  const subtotal = checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const subtotal = checkoutItems.reduce((sum, item) => {
+    let itemPrice = item.price;
+    if (wholesaleEnabled && item.wholesalePrice && item.moq && item.quantity >= item.moq) {
+      itemPrice = item.wholesalePrice;
+    }
+    return sum + itemPrice * item.quantity;
+  }, 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,17 +129,23 @@ const Checkout = () => {
           city: form.city,
           state: form.state,
           pincode: form.pincode,
-          items: checkoutItems.map((c) => ({
-            productId: c.productId,
-            name: c.name,
-            image: c.image,
-            color: c.color,
-            size: c.size,
-            quantity: c.quantity,
-            price: c.price,
-            isPrebooking: c.isPrebooking,
-            prebookingDeliveryDays: c.prebookingDeliveryDays,
-          })),
+          items: checkoutItems.map((c) => {
+            let finalPrice = c.price;
+            if (wholesaleEnabled && c.wholesalePrice && c.moq && c.quantity >= c.moq) {
+              finalPrice = c.wholesalePrice;
+            }
+            return {
+              productId: c.productId,
+              name: c.name,
+              image: c.image,
+              color: c.color,
+              size: c.size,
+              quantity: c.quantity,
+              price: finalPrice,
+              isPrebooking: c.isPrebooking,
+              prebookingDeliveryDays: c.prebookingDeliveryDays,
+            };
+          }),
           subtotal,
           total: subtotal,
           paymentStatus: 'pending' as const,

@@ -92,7 +92,13 @@ const Contact = () => {
     <PublicLayout>
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         {/* BANNER */}
-        <div className="relative w-full overflow-hidden bg-gradient-to-r from-primary to-primary/80" style={{ height: 260 }}>
+        <div className="relative w-full overflow-hidden" style={{ height: 260 }}>
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(160deg, hsl(var(--primary)/0.95), hsl(168 60% 18%))',
+            }}
+          />
           {/* dot grid */}
           <div
             className="absolute inset-0 opacity-10"
