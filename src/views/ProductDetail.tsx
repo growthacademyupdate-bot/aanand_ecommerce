@@ -713,21 +713,20 @@ const ProductDetail = () => {
             <h1 className="font-display text-2xl md:text-3xl font-bold">{product.name}</h1>
 
             <div className="flex items-center gap-3 mt-3">
-
-              <span className="text-2xl font-bold text-primary">₹{product.price.toLocaleString()}</span>
-
-              {product.comparePrice > product.price && (
-
+              <span className="text-2xl font-bold text-primary">
+                ₹{(wholesaleEnabled && product.wholesalePrice && product.moq && quantity >= product.moq) 
+                   ? product.wholesalePrice.toLocaleString() 
+                   : product.price.toLocaleString()}
+              </span>
+              {product.comparePrice > product.price && !(wholesaleEnabled && product.wholesalePrice && product.moq && quantity >= product.moq) && (
                 <>
-
                   <span className="text-lg text-muted-foreground line-through">₹{product.comparePrice.toLocaleString()}</span>
-
                   <span className="bg-destructive text-destructive-foreground text-xs font-bold px-2 py-1 rounded">-{discount}%</span>
-
                 </>
-
               )}
-
+              {wholesaleEnabled && product.wholesalePrice && product.moq && quantity >= product.moq && (
+                <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded border border-amber-200">Wholesale Applied</span>
+              )}
             </div>
 
             {wholesaleEnabled && product.wholesalePrice && product.moq && (
@@ -917,61 +916,108 @@ const ProductDetail = () => {
 
 
             {/* Quantity */}
-
             <div className="mt-6">
-
               <h3 className="text-sm font-medium mb-3">Quantity</h3>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-1 border border-border rounded-lg p-1">
+                  <button 
+                    onClick={() => setQuantity(Math.max(1, (typeof quantity === 'number' ? quantity : 1) - 1))} 
+                    className="p-1.5 hover:bg-muted rounded-md transition-colors disabled:opacity-50"
+                    disabled={currentVariantStock === 0 || (typeof quantity === 'number' && quantity <= 1)}
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  
+                  <input
+                    type="number"
+                    min="0"
+                    value={quantity === undefined || quantity === '' ? '' : quantity}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setQuantity('' as any);
+                      } else {
+                        const parsed = parseInt(val, 10);
+                        if (!isNaN(parsed) && parsed >= 0) {
+                          if (parsed > currentVariantStock) {
+                            setQuantity(currentVariantStock);
+                            toast({ title: `Only ${currentVariantStock} quantity available.`, variant: 'destructive' });
+                          } else {
+                            setQuantity(parsed);
+                          }
+                        }
+                      }
+                    }}
+                    onBlur={() => {
+                      if (quantity === '' || quantity === undefined || quantity === 0) {
+                        setQuantity(1);
+                      }
+                    }}
+                    className="w-14 text-center font-medium bg-transparent border-none focus:outline-none focus:ring-0 p-0 text-sm"
+                    disabled={currentVariantStock === 0}
+                  />
 
-              <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      const currentQ = typeof quantity === 'number' ? quantity : 0;
+                      if (currentQ < currentVariantStock) {
+                        setQuantity(currentQ + 1);
+                      } else {
+                        toast({ title: `Only ${currentVariantStock} quantity available.`, variant: 'destructive' });
+                      }
+                    }}
+                    className="p-1.5 hover:bg-muted rounded-md transition-colors disabled:opacity-50"
+                    disabled={currentVariantStock === 0 || (typeof quantity === 'number' && quantity >= currentVariantStock)}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
 
-                <button 
-
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))} 
-
-                  className="p-2 border border-border rounded-lg hover:bg-muted transition-colors"
-
-                  disabled={currentVariantStock === 0 || quantity <= 1}
-
-                >
-
-                  <Minus className="h-4 w-4" />
-
-                </button>
-
-                <span className="w-12 text-center font-medium">{quantity}</span>
-
-                <button
-
-                  onClick={() => {
-
-                    if (quantity < currentVariantStock) {
-
-                      setQuantity(quantity + 1);
-
-                    } else {
-
-                      toast({ title: `Only ${currentVariantStock} quantity available for ${selectedColor}`, variant: 'destructive' });
-
-                    }
-
-                  }}
-
-                  className="p-2 border border-border rounded-lg hover:bg-muted transition-colors"
-
-                  disabled={currentVariantStock === 0 || quantity >= currentVariantStock}
-
-                >
-
-                  <Plus className="h-4 w-4" />
-
-                </button>
-
+                {wholesaleEnabled && product.wholesalePrice && product.moq && (
+                  <div className="flex items-center gap-3 bg-amber-50 border border-amber-300 px-3 py-1.5 rounded-lg text-amber-900 shadow-sm">
+                    <div className="flex flex-col leading-none">
+                      <span className="uppercase tracking-wider text-[10px] opacity-80 font-bold">Bulk Order</span>
+                      <span className="text-[11px] font-medium">Min: {product.moq}</span>
+                    </div>
+                    <div className="h-6 w-px bg-amber-300 mx-1"></div>
+                    <label className="text-sm font-semibold flex items-center gap-2">
+                      Qty: 
+                      <input 
+                        type="number"
+                        min="0"
+                        className="w-16 h-8 rounded border-2 border-amber-400 px-2 text-sm text-center bg-white text-black font-bold focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+                        placeholder={String(product.moq)}
+                        value={quantity === undefined || quantity === '' ? '' : quantity}
+                        disabled={currentVariantStock === 0}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === '') {
+                            setQuantity('' as any);
+                          } else {
+                            const parsed = parseInt(val, 10);
+                            if (!isNaN(parsed) && parsed >= 0) {
+                              if (parsed > currentVariantStock) {
+                                setQuantity(currentVariantStock);
+                                toast({ title: `Only ${currentVariantStock} quantity available.`, variant: 'destructive' });
+                              } else {
+                                setQuantity(parsed);
+                              }
+                            }
+                          }
+                        }}
+                        onBlur={() => {
+                          if (quantity === '' || quantity === undefined || quantity === 0) {
+                            setQuantity(1);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                )}
               </div>
-
+              
               {currentVariantStock > 1 && quantity === currentVariantStock && (
-
                 <div className="text-xs text-destructive mt-1">Max available quantity reached</div>
-
               )}
 
               

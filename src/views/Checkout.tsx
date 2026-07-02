@@ -359,10 +359,19 @@ const Checkout = () => {
             
             <div className="bg-card rounded-xl p-6 border border-border">
               <h3 className="font-display text-lg font-semibold mb-4">Order Summary</h3>
-              {checkoutItems.map((item) => (
+              {checkoutItems.map((item) => {
+                const isWholesale = wholesaleEnabled && item.wholesalePrice && item.moq && item.quantity >= item.moq;
+                const actualPrice = isWholesale ? item.wholesalePrice! : item.price;
+                const originalTotal = item.price * item.quantity;
+                const actualTotal = actualPrice * item.quantity;
+
+                return (
                 <div key={`${item.productId}-${item.color}`} className="flex justify-between text-sm py-2 border-b border-border last:border-0">
                   <div className="flex-1">
                     <div className="font-medium">{item.name} &times; {item.quantity}</div>
+                    {isWholesale && (
+                      <div className="text-xs text-green-600 font-medium">Wholesale discount applied</div>
+                    )}
                     {item.isPrebooking && (
                       <div className="flex items-center gap-1 text-xs text-purple-600 mt-1">
                         <Calendar className="h-3 w-3" />
@@ -370,9 +379,14 @@ const Checkout = () => {
                       </div>
                     )}
                   </div>
-                  <span>&#x20b9;{(item.price * item.quantity).toLocaleString()}</span>
+                  <div className="flex flex-col items-end">
+                    {isWholesale && (
+                      <span className="text-xs text-muted-foreground line-through">&#x20b9;{originalTotal.toLocaleString()}</span>
+                    )}
+                    <span className="font-medium">&#x20b9;{actualTotal.toLocaleString()}</span>
+                  </div>
                 </div>
-              ))}
+              )})}
               <div className="border-t border-border mt-4 pt-4 flex justify-between font-bold text-lg">
                 <span>Total</span><span className="text-primary">&#x20b9;{subtotal.toLocaleString()}</span>
               </div>

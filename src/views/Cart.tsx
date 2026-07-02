@@ -320,9 +320,16 @@ const Cart = () => {
                         Color: {item.color}{item.size ? ` | Size: ${item.size}` : ''}
                       </p>
                       <div className="mb-4">
-                        <p className="font-bold text-xl" style={{ color: 'hsl(var(--primary))' }}>
-                          ₹{(wholesaleEnabled && item.wholesalePrice && item.moq && item.quantity >= item.moq) ? item.wholesalePrice.toLocaleString() : item.price.toLocaleString()}
-                        </p>
+                        <div className="flex items-center gap-3">
+                          <p className="font-bold text-xl" style={{ color: 'hsl(var(--primary))' }}>
+                            ₹{(wholesaleEnabled && item.wholesalePrice && item.moq && item.quantity >= item.moq) ? item.wholesalePrice.toLocaleString() : item.price.toLocaleString()}
+                          </p>
+                          {(wholesaleEnabled && item.wholesalePrice && item.moq && item.quantity >= item.moq) && (
+                            <span className="text-muted-foreground text-sm line-through">
+                              ₹{item.price.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
                         {wholesaleEnabled && item.wholesalePrice && item.moq && (
                           <div className="mt-1">
                             <span className={`text-sm font-medium ${item.quantity >= item.moq ? 'text-green-600' : 'text-amber-600'}`}>

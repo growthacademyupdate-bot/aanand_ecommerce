@@ -156,6 +156,10 @@ export async function GET(
 
       discountPercent,
 
+      wholesalePrice: product.wholesalePrice,
+
+      moq: product.moq,
+
       shortDescription: product.shortDescription,
 
       description: product.description,
