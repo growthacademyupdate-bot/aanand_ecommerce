@@ -6,27 +6,7 @@ import Image from 'next/image';
 const Footer = () => {
   return (
     <>
-      {/* Newsletter Section */}
-      <section className="bg-card py-16 border-t-[8px] border-accent">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h3 className="font-display text-3xl font-bold mb-4 text-foreground">Join Our Newsletter</h3>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Subscribe to receive updates, access to exclusive deals, and more.
-            </p>
-            <form className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
-              <input 
-                type="email" 
-                placeholder="Enter your email address" 
-                className="flex-1 px-6 py-3.5 rounded-[18px] bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent transition-colors shadow-sm"
-              />
-              <button className="px-8 py-3.5 bg-accent text-accent-foreground font-semibold rounded-[18px] hover:bg-accent/90 transition-colors shadow-lg hover:-translate-y-0.5">
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
+
 
       {/* Main Footer */}
       <footer className="bg-[#FFF0F2] text-[#800020] pt-16 pb-8 border-t border-[#800020]/10">

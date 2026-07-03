@@ -52,7 +52,7 @@ export async function GET() {
         liveSpecial,
         spotlight,
       ] = await Promise.all([
-        fetchSection({ $or: [{ featured: true }, { isFeatured: true }] }),
+        fetchSection({ $or: [{ featured: true }, { isFeatured: true }, { bestSeller: true }] }),
         fetchSection({ isNew: true }),
         fetchSection({ isSale: true }),
         fetchSection({ isPremium: true }),

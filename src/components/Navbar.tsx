@@ -148,14 +148,14 @@ const Navbar = () => {
                   </div>
                   <span className="text-[10px] font-medium hidden md:block">Wishlist</span>
                 </Link>
-                {wholesaleEnabled && (
+                {/* {wholesaleEnabled && (
                   <Link href="/quick-order" className="relative group p-2 flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
                     <div className="relative">
                       <Package className="h-6 w-6 transition-transform group-hover:scale-110" strokeWidth={1.5} />
                     </div>
                     <span className="text-[10px] font-medium hidden md:block">B2B Order</span>
                   </Link>
-                )}
+                )} */}
                 <Link href="/cart" className="relative group p-2 flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
                   <div className="relative">
                     <ShoppingCart className="h-6 w-6 transition-transform group-hover:scale-110" strokeWidth={1.5} />
@@ -407,7 +407,7 @@ const Navbar = () => {
                     </Link>
                   );
                 })}
-                {wholesaleEnabled && (
+                {/* {wholesaleEnabled && (
                   <Link
                     href="/quick-order"
                     onClick={() => setMobileOpen(false)}
@@ -419,7 +419,7 @@ const Navbar = () => {
                   >
                     B2B Quick Order
                   </Link>
-                )}
+                )} */}
               </div>
             </motion.div>
           </>

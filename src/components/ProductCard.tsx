@@ -106,8 +106,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">
-      <div ref={containerRef} className="bg-card rounded-[18px] h-full flex flex-col overflow-hidden border border-border transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1">
-        <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+      <div ref={containerRef} className="bg-card rounded-2xl h-full flex flex-col overflow-hidden border border-border/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-1.5">
+        <div className="relative aspect-[4/5] overflow-hidden bg-muted/30">
           {!imgLoaded && (
             <div className="absolute inset-0 bg-muted animate-pulse" />
           )}
@@ -178,7 +178,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </div>
 
-        <div className="p-4 md:p-5 flex flex-col flex-grow bg-card">
+        <div className="p-3 md:p-4 flex flex-col flex-grow bg-card">
           <div className="flex items-center gap-1 text-accent mb-2">
             {[...Array(5)].map((_, i) => (
               <Star key={i} className="h-3 w-3 fill-current" />

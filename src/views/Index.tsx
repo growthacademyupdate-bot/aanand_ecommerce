@@ -590,7 +590,7 @@ const Index = () => {
           />
           <ProductSection
             title="Best Sellers"
-            subtitle="Our most loved sarees"
+            subtitle="Our most loved products"
             items={bestSellers}
             filterParam="featured"
             bg="bg-muted/30"
@@ -610,8 +610,8 @@ const Index = () => {
             bg="bg-muted/50"
           />
           <ProductSection
-            title="Premium Sarees"
-            subtitle="Luxury craftsmanship for special occasions"
+            title="Premium products"
+            subtitle="Luxury redefined"
             items={premiumSarees}
             filterParam="premium"
             bg="bg-background"
@@ -737,8 +737,9 @@ const Index = () => {
                   value={reviewForm.comment}
                   onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
                   rows={3}
+                  maxLength={50}
                   className="w-full border border-border rounded-lg px-4 py-2.5 bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-                  placeholder="Share your experience..."
+                  placeholder="Share your experience (max 50 chars)..."
                 />
               </div>
               <div className="flex gap-3">
@@ -794,10 +795,10 @@ const Index = () => {
           <div className="max-w-3xl mx-auto bg-card border border-border/50 rounded-[32px] p-8 md:p-12 shadow-xl shadow-primary/5">
             <span className="text-primary font-bold tracking-widest uppercase text-xs mb-4 inline-block">Experience Luxury</span>
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              Discover Your <span className="text-primary italic">Perfect Saree</span>
+              Discover Your <span className="text-primary italic">Perfect Products</span>
             </h2>
             <p className="text-muted-foreground text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
-              Browse our complete collection of handcrafted sarees from across India. Elevate your wardrobe with timeless elegance.
+              Browse our complete collection of handcrafted products from across India. Elevate your wardrobe with timeless elegance.
             </p>
             <Link
               href="/products"

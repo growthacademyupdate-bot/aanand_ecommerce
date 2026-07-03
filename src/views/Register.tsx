@@ -248,7 +248,7 @@ const Register = () => {
             <span className="text-white/80">Anand Wholesale</span>
           </h2>
           <p className="text-white/70 text-sm">
-            Create your account and explore premium sarees.
+            Create your account and explore premium products.
           </p>
         </div>
       </div>

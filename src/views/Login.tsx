@@ -202,7 +202,7 @@ const Login = () => {
             <div className="mb-8">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-medium tracking-widest uppercase mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                Premium Sarees
+                Premium products
               </div>
               <h2 className="font-display text-4xl xl:text-5xl font-bold leading-tight mb-4">
                 परंपरेचा<br />

@@ -83,10 +83,10 @@ export default function AdminProductForm({ onClose, initialData }: Props) {
       shortDescription: initialData?.shortDescription || '',
       description: initialData?.description || '',
       labels: initialData?.labels || {
-        isFeatured: false,
-        isNewArrival: false,
-        isBestSeller: false,
-        isTrending: false,
+        isFeatured: Boolean(initialData?.featured || initialData?.isFeatured),
+        isNewArrival: Boolean(initialData?.isNew),
+        isBestSeller: Boolean(initialData?.bestSeller),
+        isTrending: Boolean(initialData?.isTrending),
         isRecommended: false,
       },
       status: initialData?.status || 'draft',
@@ -187,7 +187,11 @@ export default function AdminProductForm({ onClose, initialData }: Props) {
         ...data,
         mrp: data.originalPrice,
         taxPercent: data.gst,
-        discountValue: data.discount
+        discountValue: data.discount,
+        featured: data.labels?.isFeatured || false,
+        isNew: data.labels?.isNewArrival || false,
+        bestSeller: data.labels?.isBestSeller || false,
+        isTrending: data.labels?.isTrending || false,
       };
 
       const res = await fetch(url, {
