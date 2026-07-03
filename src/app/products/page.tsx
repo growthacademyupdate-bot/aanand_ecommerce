@@ -1,11 +1,11 @@
 import Products from "@/views/Products";
 
-export default async function Page({
+export default function Page({
   searchParams,
 }: {
-  searchParams?: Promise<{ category?: string; highlight?: string; subcategoryId?: string }>;
+  searchParams?: { category?: string; highlight?: string; subcategoryId?: string };
 }) {
-  const sp = (await searchParams) ?? {};
+  const sp = searchParams ?? {};
 
   return (
     <Products
